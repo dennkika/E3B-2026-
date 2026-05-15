@@ -37,4 +37,34 @@
     <script src="script.js"></script>
 </body>
 </html>
+/* 余白をゼロにして画面いっぱいに広げる */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: sans-serif;
+}
+
+/* リンクを画面全体に広げる魔法のコード */
+.full-screen-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    text-decoration: none; /* 下線を消す */
+    color: #333;
+    background-color: #f0f0f0; /* 背景色 */
+    transition: background 0.3s;
+}
+
+/* タップ/ホバーした時に少し色を変える演出 */
+.full-screen-link:hover {
+    background-color: #e0e0e0;
+}
+
+.content {
+    text-align: center;
+}
 
