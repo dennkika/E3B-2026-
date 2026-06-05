@@ -1,162 +1,262 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>課題研究発表 - 途中経過</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HUDグラス製作 - 課題研究途中経過発表</title>
 
-```
 <style>
-    /* 全体デザイン */
-    body {
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #f5f7fa;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-    /* メインコンテンツ */
-    .progress-container {
-        background-color: #ffffff;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
+html{
+    scroll-behavior:smooth;
+}
 
-    /* ステータス表示 */
-    .status-badge {
-        display: inline-block;
-        background-color: #e67e22;
-        color: #ffffff;
-        padding: 6px 12px;
-        border-radius: 4px;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
+body{
+    font-family:"Yu Gothic","Meiryo",sans-serif;
+    background:#f4f6f9;
+    color:#333;
+    line-height:1.8;
+}
 
-    /* タイトル */
-    h1 {
-        color: #2c3e50;
-        border-bottom: 3px solid #3498db;
-        padding-bottom: 10px;
-        margin-top: 10px;
-    }
+.container{
+    max-width:1000px;
+    margin:30px auto;
+    padding:20px;
+}
 
-    h3 {
-        color: #2c3e50;
-        margin-top: 30px;
-    }
+.card{
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom:25px;
+}
 
-    p {
-        margin-bottom: 15px;
-    }
+.status{
+    display:inline-block;
+    background:#ff9800;
+    color:white;
+    padding:8px 15px;
+    border-radius:5px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
 
-    /* 画像エリア */
-    .clickable-image-container {
-        margin: 25px 0;
-        text-align: center;
-    }
+h1{
+    color:#2c3e50;
+    border-bottom:3px solid #3498db;
+    padding-bottom:10px;
+    margin-bottom:20px;
+}
 
-    .image-link {
-        display: block;
-        overflow: hidden;
-        border-radius: 6px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        transition: all 0.3s ease;
-    }
+h2{
+    color:#3498db;
+    margin-bottom:15px;
+}
 
-    .image-link:hover,
-    .image-link:active {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
-    }
+h3{
+    color:#2c3e50;
+    margin-bottom:10px;
+}
 
-    .progress-image {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
+.image-link{
+    display:block;
+    text-decoration:none;
+}
 
-    .notice {
-        font-size: 0.9rem;
-        color: #7f8c8d;
-        margin-top: 8px;
-    }
+.image-link img{
+    width:100%;
+    border-radius:10px;
+    transition:0.3s;
+}
 
-    /* リスト */
-    ul {
-        padding-left: 20px;
-    }
+.image-link img:hover{
+    transform:scale(1.02);
+}
 
-    li {
-        margin-bottom: 8px;
-    }
+.notice{
+    text-align:center;
+    margin-top:10px;
+    color:#666;
+}
 
-    /* スマホ対応 */
-    @media (max-width: 600px) {
-        body {
-            padding: 10px;
-        }
+.progress-bar{
+    width:100%;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:15px;
+}
 
-        .progress-container {
-            padding: 20px;
-        }
+.progress{
+    width:50%;
+    background:#4caf50;
+    color:white;
+    text-align:center;
+    padding:10px;
+    font-weight:bold;
+}
 
-        h1 {
-            font-size: 1.5rem;
-        }
-    }
+.activity{
+    border-left:5px solid #3498db;
+    padding-left:20px;
+    margin-bottom:25px;
+}
+
+ul,ol{
+    margin-left:25px;
+}
+
+.top-btn{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#3498db;
+    color:white;
+    text-decoration:none;
+    padding:12px 18px;
+    border-radius:50px;
+    font-weight:bold;
+}
+
+.top-btn:hover{
+    background:#2980b9;
+}
+
+footer{
+    text-align:center;
+    color:#666;
+    padding:20px;
+}
 </style>
-```
-
 </head>
 
 <body>
 
-```
-<div class="progress-container">
+<div class="container">
 
-    <span class="status-badge">研究途中経過 発表</span>
+<div class="card">
 
-    <h1>課題研究テーマ：ここに研究タイトルを入力</h1>
+<span class="status">研究途中経過発表</span>
 
-    <p>
-        現在、研究の実験およびデータ収集を行っています。
-        これまでの成果と進捗状況を以下の画像にまとめました。
-    </p>
+<h1>課題研究テーマ：HUDグラスの製作</h1>
 
-    <div class="clickable-image-container">
-        <a href="https://example.com/your-target-site"
-           class="image-link"
-           target="_blank"
-           rel="noopener noreferrer">
+<p>
+本研究では、ヘッドアップディスプレイ（HUD）の技術を利用した
+HUDグラスの製作を行っています。
+視線を大きく動かさずに情報を確認できる装置の実現を目標としています。
+</p>
 
-            <img
-                src="progress-report.jpg"
-                alt="途中経過の発表資料"
-                class="progress-image">
-        </a>
+<br>
 
-        <p class="notice">
-            ※画像のどこをクリック・タップしても詳細ページへ移動します。
-        </p>
-    </div>
+<a href="#report" class="image-link">
+<img src="progress-report.jpg" alt="途中経過発表資料">
+</a>
 
-    <h3>現在の進捗状況</h3>
-
-    <ul>
-        <li>データの収集：80% 完了</li>
-        <li>中間解析：実施中</li>
-        <li>考察の整理：着手済み</li>
-        <li>最終発表資料：準備中</li>
-    </ul>
+<p class="notice">
+画像をクリックすると活動報告へ移動します
+</p>
 
 </div>
-```
+
+<div class="card">
+
+<h2>現在の進捗状況</h2>
+
+<div class="progress-bar">
+<div class="progress">50%</div>
+</div>
+
+<br>
+
+<ul>
+<li>研究テーマ決定：完了</li>
+<li>設計図作成：完了</li>
+<li>部品選定：完了</li>
+<li>M5StickS3動作確認：完了</li>
+<li>HUDグラス本体製作：準備中</li>
+<li>表示プログラム作成：準備中</li>
+</ul>
+
+</div>
+
+<div class="card" id="report">
+
+<h2>活動報告</h2>
+
+<div class="activity">
+<h3>第1回活動</h3>
+
+<p>
+グループで課題研究のテーマについて話し合い、
+どのような作品を製作するかを検討しました。
+その結果、最終的にHUDグラスを製作することに決定しました。
+</p>
+</div>
+
+<div class="activity">
+<h3>第2回活動</h3>
+
+<p>
+HUDグラスを製作するための設計図を作成し、
+必要な部品や材料について検討しました。
+</p>
+
+<p><strong>使用部品</strong></p>
+
+<ul>
+<li>M5StickS3</li>
+<li>カードルーペ拡大シート</li>
+<li>アクリル板（210×297×1mm）×3枚</li>
+<li>ヘッドアップディスプレー（HUD）フィルム</li>
+</ul>
+
+<p>
+検討の結果、上記4点を使用することに決定しました。
+</p>
+</div>
+
+<div class="activity">
+<h3>第3回活動</h3>
+
+<p>
+M5StickS3の動作確認を行いました。
+簡単なプログラムを作成し、画面全体を赤色に表示する実験を実施しました。
+</p>
+
+<p>
+結果として正常に赤色表示できることを確認し、
+M5StickS3が問題なく動作することを確認しました。
+</p>
+</div>
+
+<div class="activity">
+<h3>今後の予定</h3>
+
+<ol>
+<li>HUDグラス本体の製作</li>
+<li>アクリル板とHUDフィルムの加工</li>
+<li>表示プログラムの開発</li>
+<li>動作確認と改良</li>
+<li>最終発表資料の作成</li>
+</ol>
+
+</div>
+
+</div>
+
+</div>
+
+<a href="#" class="top-btn">TOP</a>
+
+<footer>
+課題研究 HUDグラス製作
+</footer>
 
 </body>
 </html>
