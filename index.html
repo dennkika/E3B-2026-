@@ -1,97 +1,162 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>課題研究発表 - 途中経過</title>
-    <style>
-        /* 全体のデザイン調整 */
+
+```
+<style>
+    /* 全体デザイン */
+    body {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f7fa;
+    }
+
+    /* メインコンテンツ */
+    .progress-container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    /* ステータス表示 */
+    .status-badge {
+        display: inline-block;
+        background-color: #e67e22;
+        color: #ffffff;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    /* タイトル */
+    h1 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 10px;
+        margin-top: 10px;
+    }
+
+    h3 {
+        color: #2c3e50;
+        margin-top: 30px;
+    }
+
+    p {
+        margin-bottom: 15px;
+    }
+
+    /* 画像エリア */
+    .clickable-image-container {
+        margin: 25px 0;
+        text-align: center;
+    }
+
+    .image-link {
+        display: block;
+        overflow: hidden;
+        border-radius: 6px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    .image-link:hover,
+    .image-link:active {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    }
+
+    .progress-image {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .notice {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        margin-top: 8px;
+    }
+
+    /* リスト */
+    ul {
+        padding-left: 20px;
+    }
+
+    li {
+        margin-bottom: 8px;
+    }
+
+    /* スマホ対応 */
+    @media (max-width: 600px) {
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
+            padding: 10px;
         }
 
         .progress-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 20px;
         }
 
         h1 {
-            color: #2c3e50;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
+            font-size: 1.5rem;
         }
+    }
+</style>
+```
 
-        .status-badge {
-            display: inline-block;
-            background-color: #e67e22;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        /* ★ここがポイント：画像リンクのエリア設定 */
-        .clickable-image-container {
-            margin: 25px 0;
-            text-align: center;
-        }
-
-        .image-link {
-            display: block; /* ブロック要素にすることでエリア全体をタップ可能に */
-            overflow: hidden;
-            border-radius: 6px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        /* タップ・ホップしたときに少し浮き上がるエフェクト（分かりやすさのため） */
-        .image-link:hover, .image-link:active {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-        }
-
-        .progress-image {
-            width: 100%;
-            height: auto;
-            display: block; /* 画像の下に謎の隙間ができるのを防ぐ */
-        }
-
-        .notice {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            margin-top: 5px;
-        }
-    </style>
 </head>
+
 <body>
 
-    <div class="progress-container">
-        <span class="status-badge">研究途中経過 発表</span>
-        <h1>課題研究テーマ：ここに研究のタイトルを入力</h1>
-        
-        <p>現在、研究の実験およびデータ収集を行っています。これまでの成果と進捗状況を以下の画像にまとめました。</p>
+```
+<div class="progress-container">
 
-        <div class="clickable-image-container">
-            <a href="https://example.com/your-target-site" class="image-link" target="_blank" rel="noopener noreferrer">
-                <img src="progress-report.jpg" alt="途中経過の発表資料" class="progress-image">
-            </a>
-            <p class="notice">※上記の画像のどこをタップしても詳細ページ（外部サイト）へ移動します。</p>
-        </div>
-        <h3>現在の進捗状況</h3>
-        <ul>
-            <li>データの収集：80% 完了</li>
-            <li>中間解析：実施中</li>
-        </ul>
+    <span class="status-badge">研究途中経過 発表</span>
+
+    <h1>課題研究テーマ：ここに研究タイトルを入力</h1>
+
+    <p>
+        現在、研究の実験およびデータ収集を行っています。
+        これまでの成果と進捗状況を以下の画像にまとめました。
+    </p>
+
+    <div class="clickable-image-container">
+        <a href="https://example.com/your-target-site"
+           class="image-link"
+           target="_blank"
+           rel="noopener noreferrer">
+
+            <img
+                src="progress-report.jpg"
+                alt="途中経過の発表資料"
+                class="progress-image">
+        </a>
+
+        <p class="notice">
+            ※画像のどこをクリック・タップしても詳細ページへ移動します。
+        </p>
     </div>
+
+    <h3>現在の進捗状況</h3>
+
+    <ul>
+        <li>データの収集：80% 完了</li>
+        <li>中間解析：実施中</li>
+        <li>考察の整理：着手済み</li>
+        <li>最終発表資料：準備中</li>
+    </ul>
+
+</div>
+```
 
 </body>
 </html>
