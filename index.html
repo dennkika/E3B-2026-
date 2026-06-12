@@ -3,259 +3,416 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HUDグラス製作 - 課題研究途中経過発表</title>
+<title>HUDグラス製作 - 課題研究途中経過発表 | SONY-Inspired Portfolio</title>
 
 <style>
+/* --- 全体のリセットと共通設定 --- */
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 html{
-    scroll-behavior:smooth;
+    scroll-behavior: smooth;
 }
 
 body{
-    font-family:"Yu Gothic","Meiryo",sans-serif;
-    background:#f4f6f9;
-    color:#333;
-    line-height:1.8;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+    background: #000000; /* ソニーらしい高級感のある黒背景 */
+    color: #ffffff;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
 }
 
+/* --- ソニー風のグローバルナビゲーション --- */
+header {
+    background: #111111;
+    border-bottom: 1px solid #222;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.nav-links a {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-left: 20px;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #fff;
+}
+
+/* --- コンテナレイアウト --- */
 .container{
-    max-width:1000px;
-    margin:30px auto;
-    padding:20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-.card{
-    background:white;
-    padding:30px;
-    border-radius:12px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.1);
-    margin-bottom:25px;
+/* --- 各セクション（ソニーの製品サイト風） --- */
+section {
+    padding: 80px 0;
+    border-bottom: 1px solid #222;
+}
+
+section:last-of-type {
+    border-bottom: none;
+}
+
+/* ヒーローセクション（メイン視覚効果） */
+.hero-section {
+    text-align: center;
+    padding: 100px 0 60px 0;
 }
 
 .status{
-    display:inline-block;
-    background:#ff9800;
-    color:white;
-    padding:8px 15px;
-    border-radius:5px;
-    font-weight:bold;
-    margin-bottom:15px;
+    display: inline-block;
+    border: 1px solid #ff9800;
+    color: #ff9800;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    text-transform: uppercase;
 }
 
 h1{
-    color:#2c3e50;
-    border-bottom:3px solid #3498db;
-    padding-bottom:10px;
-    margin-bottom:20px;
+    font-size: 2.5rem;
+    font-weight: 300; /* 薄めのウェイトでモダンに */
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    margin-bottom: 25px;
 }
 
-h2{
-    color:#3498db;
-    margin-bottom:15px;
+.lead-text {
+    font-size: 1.1rem;
+    color: #aaa;
+    max-width: 700px;
+    margin: 0 auto 40px auto;
 }
 
-h3{
-    color:#2c3e50;
-    margin-bottom:10px;
+/* 画像リンクの演出 */
+.image-container {
+    max-width: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+    background: #111;
 }
 
 .image-link{
-    display:block;
-    text-decoration:none;
+    display: block;
+    text-decoration: none;
+    position: relative;
 }
 
 .image-link img{
-    width:100%;
-    border-radius:10px;
-    transition:0.3s;
+    width: 100%;
+    vertical-align: middle;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.image-link img:hover{
-    transform:scale(1.02);
+.image-link:hover img{
+    transform: scale(1.05);
 }
 
 .notice{
-    text-align:center;
-    margin-top:10px;
-    color:#666;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.8rem;
+    color: #666;
+    letter-spacing: 0.05em;
+}
+
+/* --- コンテンツの見出し --- */
+h2{
+    font-size: 1.8rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    margin-bottom: 35px;
+    position: relative;
+}
+
+h3{
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+/* --- 進捗状況（スマートなインジケーター） --- */
+.progress-container {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .progress-bar{
-    width:100%;
-    background:#ddd;
-    border-radius:20px;
-    overflow:hidden;
-    margin-top:15px;
+    width: 100%;
+    background: #222;
+    height: 4px; /* 極細のスタイリッシュなラインに変形 */
+    margin-top: 15px;
+    position: relative;
 }
 
 .progress{
-    width:50%;
-    background:#4caf50;
-    color:white;
-    text-align:center;
-    padding:10px;
-    font-weight:bold;
+    width: 50%;
+    background: #ffffff; /* ソニー風のモノトーン、またはアクセントカラー */
+    height: 100%;
+}
+
+.progress-text {
+    font-size: 2.5rem;
+    font-weight: 200;
+    margin-bottom: 5px;
+}
+
+.status-list {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    list-style: none;
+}
+
+.status-list li {
+    background: #111;
+    padding: 15px 20px;
+    border-left: 2px solid #333;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.status-list li.done {
+    border-left-color: #ff9800; /* 完了アイテムのアクセント */
+    color: #fff;
+}
+
+/* --- 活動報告タイムライン --- */
+.activity-container {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .activity{
-    border-left:5px solid #3498db;
-    padding-left:20px;
-    margin-bottom:25px;
+    border-bottom: 1px solid #222;
+    padding: 30px 0;
 }
 
-ul,ol{
-    margin-left:25px;
+.activity:last-of-type {
+    border-bottom: none;
 }
 
+.activity p {
+    color: #aaa;
+    font-size: 0.95rem;
+}
+
+.component-list {
+    margin: 15px 0 0 20px;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+/* --- 今後の予定（ナンバリング） --- */
+.future-plan {
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid #222;
+}
+
+.plan-list {
+    list-style: none;
+    counter-reset: plan-counter;
+}
+
+.plan-list li {
+    position: relative;
+    padding-left: 40px;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    color: #ccc;
+    counter-increment: plan-counter;
+}
+
+.plan-list li::before {
+    content: "0" counter(plan-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #ff9800;
+}
+
+/* --- トップへ戻るボタン --- */
 .top-btn{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    background:#3498db;
-    color:white;
-    text-decoration:none;
-    padding:12px 18px;
-    border-radius:50px;
-    font-weight:bold;
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.3s;
 }
 
 .top-btn:hover{
-    background:#2980b9;
+    background: #ffffff;
+    color: #000000;
 }
 
+/* --- フッター --- */
 footer{
-    text-align:center;
-    color:#666;
-    padding:20px;
+    text-align: center;
+    color: #555;
+    font-size: 0.8rem;
+    padding: 60px 20px;
+    background: #0a0a0a;
+    border-top: 1px solid #111;
+    letter-spacing: 0.05em;
 }
 </style>
 </head>
 
 <body>
 
+<!-- ソニーのトップを意識したヘッダーバー -->
+<header>
+    <div class="header-container">
+        <div class="logo">HUD PROJECT</div>
+        <nav class="nav-links">
+            <a href="#overview">概要</a>
+            <a href="#status">進捗</a>
+            <a href="#report">活動報告</a>
+        </nav>
+    </div>
+</header>
+
 <div class="container">
 
-<div class="card">
+    <!-- ヒーローセクション（概要） -->
+    <section id="overview" class="hero-section">
+        <span class="status">研究途中経過発表</span>
+        <h1>課題研究テーマ：HUDグラスの製作</h1>
+        <p class="lead-text">
+            本研究では、ヘッドアップディスプレイ（HUD）の技術を利用したHUDグラスの製作を行っています。視線を大きく動かさずに、必要な情報をスマートに確認できる装置の実現を目標としています。
+        </p>
 
-<span class="status">研究途中経過発表</span>
+        <div class="image-container">
+            <a href="#report" class="image-link">
+                <img src="progress-report.jpg" alt="途中経過発表資料">
+            </a>
+        </div>
+        <p class="notice">※画像をクリックすると活動報告へ移動します</p>
+    </section>
 
-<h1>課題研究テーマ：HUDグラスの製作</h1>
+    <!-- 進捗状況セクション -->
+    <section id="status">
+        <div class="progress-container">
+            <h2>現在の進捗状況</h2>
+            <div class="progress-text">50%</div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
 
-<p>
-本研究では、ヘッドアップディスプレイ（HUD）の技術を利用した
-HUDグラスの製作を行っています。
-視線を大きく動かさずに情報を確認できる装置の実現を目標としています。
-</p>
+            <ul class="status-list">
+                <li class="done">✔ 研究テーマ決定：完了</li>
+                <li class="done">✔ 設計図作成：完了</li>
+                <li class="done">✔ 部品選定：完了</li>
+                <li class="done">✔ M5StickS3動作確認：完了</li>
+                <li>□ HUDグラス本体製作：準備中</li>
+                <li>□ 表示プログラム作成：準備中</li>
+            </ul>
+        </div>
+    </section>
 
-<br>
+    <!-- 活動報告セクション -->
+    <section id="report">
+        <div class="activity-container">
+            <h2>活動報告</h2>
 
-<a href="#report" class="image-link">
-<img src="progress-report.jpg" alt="途中経過発表資料">
-</a>
+            <div class="activity">
+                <h3>第1回活動</h3>
+                <p>
+                    グループで課題研究のテーマについて話し合い、どのような作品を製作するかを検討しました。その結果、最終的にHUDグラスを製作することに決定しました。
+                </p>
+            </div>
 
-<p class="notice">
-画像をクリックすると活動報告へ移動します
-</p>
+            <div class="activity">
+                <h3>第2回活動</h3>
+                <p>
+                    HUDグラスを製作するための設計図を作成し、必要な部品や材料について検討しました。
+                </p>
+                <br>
+                <h3>使用部品</h3>
+                <ul class="component-list">
+                    <li>M5StickS3</li>
+                    <li>カードルーペ拡大シート</li>
+                    <li>アクリル板（210×297×1mm）×3枚</li>
+                    <li>ヘッドアップディスプレー（HUD）フィルム</li>
+                </ul>
+            </div>
 
-</div>
+            <div class="activity">
+                <h3>第3回活動</h3>
+                <p>
+                    M5StickS3の動作確認を行いました。簡単なプログラムを作成し、画面全体を赤色に表示する実験を実施しました。結果として正常に赤色表示できることを確認し、M5StickS3が問題なく動作することを確認しました。
+                </p>
+            </div>
 
-<div class="card">
-
-<h2>現在の進捗状況</h2>
-
-<div class="progress-bar">
-<div class="progress">50%</div>
-</div>
-
-<br>
-
-<ul>
-<li>研究テーマ決定：完了</li>
-<li>設計図作成：完了</li>
-<li>部品選定：完了</li>
-<li>M5StickS3動作確認：完了</li>
-<li>HUDグラス本体製作：準備中</li>
-<li>表示プログラム作成：準備中</li>
-</ul>
-
-</div>
-
-<div class="card" id="report">
-
-<h2>活動報告</h2>
-
-<div class="activity">
-<h3>第1回活動</h3>
-
-<p>
-グループで課題研究のテーマについて話し合い、
-どのような作品を製作するかを検討しました。
-その結果、最終的にHUDグラスを製作することに決定しました。
-</p>
-</div>
-
-<div class="activity">
-<h3>第2回活動</h3>
-
-<p>
-HUDグラスを製作するための設計図を作成し、
-必要な部品や材料について検討しました。
-</p>
-
-<p><strong>使用部品</strong></p>
-
-<ul>
-<li>M5StickS3</li>
-<li>カードルーペ拡大シート</li>
-<li>アクリル板（210×297×1mm）×3枚</li>
-<li>ヘッドアップディスプレー（HUD）フィルム</li>
-</ul>
-
-<p>
-検討の結果、上記4点を使用することに決定しました。
-</p>
-</div>
-
-<div class="activity">
-<h3>第3回活動</h3>
-
-<p>
-M5StickS3の動作確認を行いました。
-簡単なプログラムを作成し、画面全体を赤色に表示する実験を実施しました。
-</p>
-
-<p>
-結果として正常に赤色表示できることを確認し、
-M5StickS3が問題なく動作することを確認しました。
-</p>
-</div>
-
-<div class="activity">
-<h3>今後の予定</h3>
-
-<ol>
-<li>HUDグラス本体の製作</li>
-<li>アクリル板とHUDフィルムの加工</li>
-<li>表示プログラムの開発</li>
-<li>動作確認と改良</li>
-<li>最終発表資料の作成</li>
-</ol>
+            <!-- 今後の予定 -->
+            <div class="future-plan">
+                <h2>今後の予定</h2>
+                <ol class="plan-list">
+                    <li>HUDグラス本体の製作</li>
+                    <li>アクリル板とHUDフィルムの加工</li>
+                    <li>表示プログラムの開発</li>
+                    <li>動作確認と改良</li>
+                    <li>最終発表資料の作成</li>
+                </ol>
+            </div>
+        </div>
+    </section>
 
 </div>
 
-</div>
-
-</div>
-
+<!-- 固定トップボタン -->
 <a href="#" class="top-btn">TOP</a>
 
 <footer>
-課題研究 HUDグラス製作
+    © 課題研究 HUDグラス製作 プロジェクト
 </footer>
 
 </body>
