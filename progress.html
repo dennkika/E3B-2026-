@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進捗状況・活動報告 | HUD PROJECT</title>
+    <style>
+        /* --- 全体リセットと基本設定 --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+            background-color: #f5f5f7; /* Appleのセクション背景色 */
+            color: #1d1d1f;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- グローバルナビゲーション --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 48px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d1d1f;
+            text-decoration: none;
+        }
+        .nav-links a {
+            font-size: 12px;
+            color: #1d1d1f;
+            text-decoration: none;
+            margin-left: 24px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        /* --- コンテンツレイアウト --- */
+        .container {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 100px 20px 60px; /* ヘッダー分の余白を確保 */
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 40px;
+            font-weight: 600;
+            letter-spacing: -0.005em;
+            margin-bottom: 50px;
+        }
+
+        /* カードデザイン (Apple風の白背景+角丸+シャドウ) */
+        .card {
+            background-color: #ffffff;
+            border-radius: 18px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #1d1d1f;
+            border-bottom: 1px solid #d2d2d7;
+            padding-bottom: 15px;
+        }
+
+        /* --- プログレスバー --- */
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+        .progress-text {
+            font-size: 48px;
+            font-weight: 500;
+            color: #0066cc; /* Appleブルー */
+        }
+        .progress-bar-bg {
+            width: 100%;
+            background-color: #e5e5ea;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        .progress-bar-fill {
+            width: 50%;
+            background-color: #0066cc;
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        /* 進捗リスト */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            list-style: none;
+        }
+        .status-grid li {
+            background: #f5f5f7;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #86868b;
+            display: flex;
+            align-items: center;
+        }
+        .status-grid li.done {
+            background: #e8f4fd; /* 薄い青 */
+            color: #0066cc;
+            font-weight: 500;
+        }
+        .icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        /* --- 活動報告タイムライン --- */
+        .activity-block {
+            margin-bottom: 40px;
+        }
+        .activity-block:last-child {
+            margin-bottom: 0;
+        }
+        .activity-block h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .activity-block p {
+            font-size: 15px;
+            color: #515154;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .component-list {
+            margin-left: 20px;
+            color: #515154;
+            font-size: 14px;
+            list-style-type: disc;
+        }
+        .component-list li {
+            margin-bottom: 5px;
+        }
+
+        /* --- 今後の予定（ナンバリング） --- */
+        .plan-list {
+            list-style: none;
+            counter-reset: plan-counter;
+        }
+        .plan-list li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #1d1d1f;
+            counter-increment: plan-counter;
+        }
+        .plan-list li::before {
+            content: counter(plan-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            background-color: #1d1d1f;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* フッター */
+        footer {
+            text-align: center;
+            color: #86868b;
+            font-size: 12px;
+            padding: 40px 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">HUD PROJECT</a>
+            <div class="nav-links">
+                <a href="#status">進捗状況</a>
+                <a href="#report">活動報告</a>
+                <a href="#future">今後の予定</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">プロジェクト進行状況</h1>
+
+        <section id="status" class="card">
+            <h2>現在の進捗状況</h2>
+            <div class="progress-header">
+                <div class="progress-text">50%</div>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill"></div>
+            </div>
+
+            <ul class="status-grid">
+                <li class="done"><span class="icon">✓</span> 研究テーマ決定</li>
+                <li class="done"><span class="icon">✓</span> 設計図作成</li>
+                <li class="done"><span class="icon">✓</span> 部品選定</li>
+                <li class="done"><span class="icon">✓</span> M5StickS3動作確認</li>
+                <li><span class="icon">−</span> HUDグラス本体製作</li>
+                <li><span class="icon">−</span> 表示プログラム作成</li>
+            </ul>
+        </section>
+
+        <section id="report" class="card">
+            <h2>活動報告</h2>
+            
+            <div class="activity-block">
+                <h3>第1回活動</h3>
+                <p>グループで課題研究のテーマについて話し合い、どのような作品を製作するかを検討しました。その結果、最終的にHUDグラスを製作することに決定しました。</p>
+            </div>
+
+            <div class="activity-block">
+                <h3>第2回活動</h3>
+                <p>HUDグラスを製作するための設計図を作成し、必要な部品や材料について検討しました。</p>
+                <p><strong>【使用部品】</strong></p>
+                <ul class="component-list">
+                    <li>M5StickS3</li>
+                    <li>カードルーペ拡大シート</li>
+                    <li>アクリル板（210×297×1mm）×3枚</li>
+                    <li>ヘッドアップディスプレー（HUD）フィルム</li>
+                </ul>
+            </div>
+
+            <div class="activity-block">
+                <h3>第3回活動</h3>
+                <p>M5StickS3の動作確認を行いました。簡単なプログラムを作成し、画面全体を赤色に表示する実験を実施しました。結果として正常に赤色表示できることを確認し、M5StickS3が問題なく動作することを確認しました。</p>
+            </div>
+        </section>
+
+        <section id="future" class="card">
+            <h2>今後の予定</h2>
+            <ol class="plan-list">
+                <li>HUDグラス本体の製作</li>
+                <li>アクリル板とHUDフィルムの加工</li>
+                <li>表示プログラムの開発</li>
+                <li>動作確認と改良</li>
+                <li>最終発表資料の作成</li>
+            </ol>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 課題研究 HUDグラス製作プロジェクト All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
