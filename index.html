@@ -3,160 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUDグラス製作プロジェクト</title>
+    <title>HUD PROJECT | 次世代の視界</title>
     <style>
-        /* --- 全体のリセットとApple風フォント設定 --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* --- Base & Reset --- */
+        :root {
+            --bg-color: #ffffff;
+            --section-bg: #fbfbfd;
+            --text-main: #1d1d1f;
+            --text-muted: #86868b;
+            --link-color: #0066cc;
+            --accent: #ff6b00;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
-            font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Arial, sans-serif;
-            background-color: #ffffff; /* Appleらしい白背景 */
-            color: #1d1d1f; /* 墨のような濃いグレー */
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- グローバルナビゲーション（すりガラス効果） --- */
+        /* --- Animations --- */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-up { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* --- Global Navigation --- */
         header {
-            background-color: rgba(255, 255, 255, 0.8);
+            position: fixed;
+            top: 0; width: 100%; height: 52px;
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            height: 48px;
-            z-index: 9999;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: center;
         }
-        .nav-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
+        .nav-inner {
+            width: 100%; max-width: 980px; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-logo {
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            color: #1d1d1f;
-            text-decoration: none;
-        }
+        .logo { font-size: 18px; font-weight: 600; text-decoration: none; color: var(--text-main); letter-spacing: -0.01em; }
         .nav-links a {
-            font-size: 12px;
-            color: #1d1d1f;
-            text-decoration: none;
-            margin-left: 24px;
-            opacity: 0.8;
-            transition: opacity 0.3s;
+            font-size: 12px; font-weight: 400; text-decoration: none; color: var(--text-main);
+            margin-left: 30px; opacity: 0.8; transition: opacity 0.3s;
         }
-        .nav-links a:hover {
-            opacity: 1;
-        }
+        .nav-links a:hover { opacity: 1; }
 
-        /* --- ヒーローセクション --- */
+        /* --- Hero Section --- */
         .hero {
-            text-align: center;
-            padding-top: 140px;
-            padding-bottom: 80px;
+            text-align: center; padding: 160px 20px 100px;
+            background-color: var(--bg-color);
         }
         .hero-badge {
-            display: inline-block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #bf4800; /* Appleの新製品タグ風のオレンジ */
-            letter-spacing: 0.02em;
-            margin-bottom: 12px;
+            display: inline-block; font-size: 12px; font-weight: 600; color: var(--accent);
+            letter-spacing: 0.05em; margin-bottom: 16px; text-transform: uppercase;
         }
         .hero h1 {
-            font-size: 56px;
-            font-weight: 600;
-            letter-spacing: -0.005em;
-            margin-bottom: 15px;
+            font-size: clamp(48px, 8vw, 80px); font-weight: 700; letter-spacing: -0.015em;
+            margin-bottom: 20px; line-height: 1.05;
         }
         .hero p {
-            font-size: 24px;
-            font-weight: 400;
-            color: #86868b; /* サブテキスト用のグレー */
-            max-width: 600px;
-            margin: 0 auto 30px auto;
-            line-height: 1.4;
+            font-size: clamp(18px, 3vw, 28px); font-weight: 400; color: var(--text-muted);
+            max-width: 700px; margin: 0 auto 40px; line-height: 1.4;
         }
-        
-        /* Apple風の青色リンク */
-        .cta-link {
-            font-size: 21px;
-            color: #0066cc;
-            text-decoration: none;
-            font-weight: 400;
-            display: inline-flex;
-            align-items: center;
-            transition: text-decoration 0.3s;
+        .btn-primary {
+            display: inline-block; background: var(--text-main); color: #fff;
+            padding: 14px 28px; border-radius: 980px; font-size: 17px; font-weight: 400;
+            text-decoration: none; transition: transform 0.3s, background 0.3s;
         }
-        .cta-link:hover {
-            text-decoration: underline;
+        .btn-primary:hover { background: #000; transform: scale(1.02); }
+        .hero-image {
+            max-width: 980px; margin: 60px auto 0; padding: 0 20px;
         }
-        .cta-link::after {
-            content: " >";
-            font-size: 20px;
-            margin-left: 5px;
+        .hero-image img {
+            width: 100%; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+            object-fit: cover;
         }
 
-        /* --- プロダクト画像エリア --- */
-        .product-image {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px;
-            margin-bottom: 100px;
+        /* --- Features Section (Expanded) --- */
+        .features {
+            background-color: var(--section-bg); padding: 120px 20px; text-align: center;
         }
-        .product-image img {
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08); /* 浮き出るようなシャドウ */
+        .features h2 { font-size: 40px; font-weight: 600; margin-bottom: 60px; letter-spacing: -0.01em; }
+        .feature-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px; max-width: 980px; margin: 0 auto;
         }
+        .feature-card {
+            background: #fff; padding: 50px 30px; border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03); text-align: left;
+        }
+        .feature-icon {
+            width: 48px; height: 48px; background: #f5f5f7; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 24px;
+        }
+        .feature-card h3 { font-size: 24px; font-weight: 600; margin-bottom: 12px; }
+        .feature-card p { font-size: 16px; color: var(--text-muted); line-height: 1.6; }
 
-        /* --- フッター --- */
+        /* --- Footer --- */
         footer {
-            background-color: #f5f5f7;
-            padding: 40px 20px;
-            text-align: center;
-            font-size: 12px;
-            color: #86868b;
+            background-color: var(--section-bg); padding: 60px 20px;
+            text-align: center; color: var(--text-muted); font-size: 12px; border-top: 1px solid #d2d2d7;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">HUD PROJECT</a>
-            <div class="nav-links">
+        <div class="nav-inner">
+            <a href="index.html" class="logo">HUD Project.</a>
+            <nav class="nav-links">
                 <a href="progress.html">進捗状況・活動報告</a>
-            </div>
+            </nav>
         </div>
     </header>
 
     <main>
-        <section class="hero">
+        <section class="hero animate-up">
             <span class="hero-badge">課題研究プロジェクト</span>
-            <h1>視線の先に、必要なすべてを。</h1>
-            <p>HUDグラスの製作。視線を大きく動かさずに、情報をスマートに確認できる次世代の装置を目指して。</p>
-            <a href="progress.html" class="cta-link">最新の進捗状況を見る</a>
+            <h1>視線の先に、<br>必要なすべてを。</h1>
+            <p>M5StickS3と光学フィルムが織りなす、次世代のヘッドアップディスプレイ。スマートな情報確認を、あなたの日常に。</p>
+            <a href="progress.html" class="btn-primary">プロジェクトの進捗を見る</a>
+            
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80" alt="HUD Glass Concept" style="height: 500px;">
+            </div>
         </section>
 
-        <div class="product-image">
-            <img src="https://via.placeholder.com/800x450/f5f5f7/1d1d1f?text=HUD+Glass+Concept+Image" alt="HUDグラスコンセプトイメージ">
-        </div>
+        <section class="features">
+            <div class="animate-up" style="animation-delay: 0.3s;">
+                <h2>設計思想とテクノロジー。</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3>シームレスな視界</h3>
+                        <p>カードルーペ拡大シートとHUDフィルムを組み合わせることで、視界を遮ることなく、空間に情報を自然に浮かび上がらせます。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡️</div>
+                        <h3>M5StickS3 搭載</h3>
+                        <p>小型でありながら強力な処理能力を持つM5StickS3をコアに採用。ワイヤレスでリアルタイムなデータ描画を実現します。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🛠</div>
+                        <h3>ミニマルなデザイン</h3>
+                        <p>アクリル板（210×297×1mm）を精密に加工し、軽量かつ耐久性の高いプロトタイプフレームを設計。無駄のない構造を追求しました。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 課題研究 HUDグラス製作プロジェクト All rights reserved.</p>
+        <p>&copy; 2024 課題研究 HUDグラス製作プロジェクト. All rights reserved.</p>
     </footer>
 
 </body>
