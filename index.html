@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HUD PROJECT | 課題研究2班</title>
     <style>
-        /* --- 1. 全体カラー・フォント設定 --- */
+        /* --- 1. 全体カラー・フォント設定 (ライトテーマに戻しました) --- */
         :root {
-            --bg-color: #111111;      /* HUDが映えるダークテーマ */
-            --card-bg: #1c1c1e;
-            --text-main: #f5f5f7;
-            --text-muted: #a1a1a6;
-            --accent: #00ffcc;        /* サイバー感のあるネオンカラー */
-            --accent-orange: #ff9f0a;
-            --border: #333336;
+            --bg-color: #fbfbfd;      /* Apple風の洗練された背景色 */
+            --card-bg: #ffffff;       /* カードの背景（白） */
+            --text-main: #1d1d1f;     /* メインの文字色（濃いグレー） */
+            --text-muted: #86868b;    /* 補足の文字色（薄いグレー） */
+            --accent: #0066cc;        /* アクセントカラー（青） */
+            --accent-orange: #ff6b00; /* アクセント（オレンジ） */
+            --border: #d2d2d7;        /* 境界線の色 */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
             background-color: var(--bg-color); 
             color: var(--text-main); 
             line-height: 1.6; 
@@ -34,12 +34,13 @@
         }
         .animate-up { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* --- 2. ヘッダーナビゲーション --- */
+        /* --- 2. ヘッダーナビゲーション (ライトテーマ用に調整) --- */
         header {
             position: fixed; top: 0; width: 100%; height: 52px;
-            background: rgba(17, 17, 17, 0.8); 
+            background: rgba(255, 255, 255, 0.7); 
             backdrop-filter: saturate(180%) blur(20px); 
-            z-index: 1000; border-bottom: 1px solid var(--border); 
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); 
             display: flex; align-items: center; justify-content: center;
         }
         .nav-inner {
@@ -48,10 +49,10 @@
         }
         .logo { font-size: 18px; font-weight: 600; text-decoration: none; color: var(--text-main); }
         .nav-links a {
-            font-size: 12px; text-decoration: none; color: var(--text-muted); 
-            margin-left: 24px; transition: color 0.3s;
+            font-size: 12px; text-decoration: none; color: var(--text-main); 
+            margin-left: 24px; opacity: 0.8; transition: opacity 0.3s;
         }
-        .nav-links a:hover { color: var(--accent); }
+        .nav-links a:hover { opacity: 1; }
 
         /* --- 3. レイアウトコンテナ --- */
         .container { width: 100%; max-width: 900px; margin: 0 auto; padding: 100px 20px 80px; }
@@ -70,7 +71,7 @@
             width: 100%;
             border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 255, 204, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
             margin-bottom: 60px;
             background-color: #000;
         }
@@ -83,31 +84,30 @@
         /* --- 6. メインカード --- */
         .card {
             background-color: var(--card-bg); border-radius: 24px; padding: 40px;
-            margin-bottom: 40px; border: 1px solid var(--border);
+            margin-bottom: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.04);
         }
         .card-header { font-size: 26px; font-weight: 600; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
 
-        /* --- 7. 進捗状況バー --- */
+        /* --- 7. 進捗状況バー (ライトテーマ用に調整) --- */
         .progress-wrapper { margin-bottom: 30px; }
         .progress-info { display: flex; justify-content: space-between; margin-bottom: 12px; }
         .progress-label { font-size: 16px; font-weight: 600; }
         .progress-percent { font-size: 36px; font-weight: 700; color: var(--accent); }
-        .progress-track { width: 100%; height: 12px; background-color: #333; border-radius: 99px; overflow: hidden; }
+        .progress-track { width: 100%; height: 12px; background-color: #e5e5ea; border-radius: 99px; overflow: hidden; }
         .progress-fill { width: 30%; height: 100%; background-color: var(--accent); border-radius: 99px; }
 
-        /* --- 8. タスク一覧 --- */
+        /* --- 8. タスク一覧 (ライトテーマ用に調整) --- */
         .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; list-style: none; }
         .task-item {
             padding: 16px 20px; background: var(--bg-color); border-radius: 16px; font-size: 14px;
-            display: flex; align-items: center; color: var(--text-muted); border: 1px solid var(--border);
+            display: flex; align-items: center; color: var(--text-muted); border: 1px solid transparent;
         }
-        .task-item.done { border-color: var(--accent); color: var(--text-main); }
-        .task-item.done span { color: var(--accent); }
+        .task-item.done { background: #f0f8ff; border-color: #cce5ff; color: var(--accent); }
         .task-item span { margin-right: 12px; font-size: 16px; }
 
-        /* --- 9. タイムライン（活動報告） --- */
+        /* --- 9. タイムライン（活動報告）(ライトテーマ用に調整) --- */
         .timeline { position: relative; padding-left: 24px; }
-        .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 0; width: 2px; background: var(--border); }
+        .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 0; width: 2px; background: #e5e5ea; }
         .timeline-item { position: relative; margin-bottom: 40px; }
         .timeline-item::before {
             content: ''; position: absolute; left: -29px; top: 6px; width: 12px; height: 12px;
@@ -115,16 +115,16 @@
         }
         .timeline-date { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; display: block; }
         .timeline-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-        .timeline-content { font-size: 15px; color: #d1d1d6; }
+        .timeline-content { font-size: 15px; color: #515154; }
         .timeline-content ul { margin: 12px 0 0 24px; color: var(--text-muted); font-size: 14px; }
 
-        /* --- 10. 今後の予定 --- */
+        /* --- 10. 今後の予定 (ライトテーマ用に調整) --- */
         .ordered-list { list-style: none; counter-reset: custom-counter; }
         .ordered-list li { position: relative; padding-left: 48px; margin-bottom: 20px; font-size: 16px; }
         .ordered-list li::before {
             content: counter(custom-counter); counter-increment: custom-counter;
             position: absolute; left: 0; top: -2px; width: 28px; height: 28px;
-            background: var(--accent); color: #000; border-radius: 50%;
+            background: var(--text-main); color: #fff; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold;
         }
 
@@ -151,7 +151,7 @@
             <p>私たち2班は「HUD PROJECT」を通じ、車の運転中に視線を外すことなくナビゲーションや安全情報をフロントガラスに投影するシステムの開発と研究を行っています。</p>
             
             <div class="hero-image-wrapper">
-                <img src="image_73c61e.jpg" alt="HUDドライブイメージ">
+                <img src="image_0.png" alt="HUDドライブイメージ">
             </div>
         </section>
 
