@@ -96,8 +96,8 @@
         .feature-card {
             background: #fff; padding: 50px 30px; border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.03); text-align: left;
-            height: 100%; /* 高さを揃えるため */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* アニメーション追加 */
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .feature-icon {
             width: 48px; height: 48px; background: #f5f5f7; border-radius: 12px;
@@ -108,6 +108,69 @@
 
         /* --- リンク用カードのスタイル --- */
         .feature-card-link {
-            text-decoration: none; /* 下線を消す */
-            color: inherit; /* テキストの色を親要素に合わせる */
+            text-decoration: none;
+            color: inherit;
             display: block;
+        }
+        /* 追加: ホバー時のアニメーション効果 */
+        .feature-card-link:hover .feature-card {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-inner">
+            <a href="#" class="logo">HUD PROJECT</a>
+            <nav class="nav-links">
+                <a href="#hero">Home</a>
+                <a href="#features">Features</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="hero animate-up">
+            <span class="hero-badge">New Innovation</span>
+            <h1>次世代の視界へ。</h1>
+            <p>日常のあらゆる情報を、あなたの目の前にシームレスに展開します。</p>
+            <a href="#features" class="btn-primary">さらに詳しく</a>
+            <div class="hero-image">
+                <img src="https://via.placeholder.com/980x500/eaeaea/86868b?text=HUD+Project+Image" alt="HUD Project Visual">
+            </div>
+        </section>
+
+        <section id="features" class="features animate-up">
+            <h2>Core Features</h2>
+            <div class="feature-grid">
+                <a href="#" class="feature-card-link">
+                    <div class="feature-card">
+                        <div class="feature-icon">👁️</div>
+                        <h3>クリアな視認性</h3>
+                        <p>透過型の高精細ディスプレイにより、現実空間を遮ることなく必要な情報だけを鮮明に映し出します。</p>
+                    </div>
+                </a>
+                
+                <a href="#" class="feature-card-link">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>ゼロ・レイテンシ</h3>
+                        <p>M5StickS3と最適化されたプログラムにより、遅延のないリアルタイムなデータ描画を実現します。</p>
+                    </div>
+                </a>
+
+                <a href="#" class="feature-card-link">
+                    <div class="feature-card">
+                        <div class="feature-icon">🛠️</div>
+                        <h3>シームレスな統合</h3>
+                        <p>GitHubによる管理とArduino連携により、今後の拡張やアップデートにも柔軟に対応可能です。</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
