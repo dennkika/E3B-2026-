@@ -3,174 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUD PROJECT | 次世代の視界</title>
+    <title>HUD PROJECT | 課題研究2班</title>
     <style>
-        /* --- Base & Reset --- */
+        /* --- デザインの共通設定 --- */
         :root {
-            --bg-color: #ffffff;
-            --section-bg: #fbfbfd;
+            --bg-color: #fbfbfd;
+            --card-bg: #ffffff;
             --text-main: #1d1d1f;
             --text-muted: #86868b;
-            --link-color: #0066cc;
-            --accent: #ff6b00;
+            --accent: #0066cc;
+            --accent-orange: #ff6b00;
+            --border: #d2d2d7;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.5;
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            line-height: 1.5; 
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- Animations --- */
+        /* --- アニメーション --- */
         @keyframes fadeInUp {
             0% { opacity: 0; transform: translateY(30px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-        .animate-up { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-up { 
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+        }
 
-        /* --- Global Navigation --- */
+        /* --- ヘッダーナビゲーション --- */
         header {
-            position: fixed;
-            top: 0; width: 100%; height: 52px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: saturate(180%) blur(20px);
+            position: fixed; top: 0; width: 100%; height: 52px;
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: saturate(180%) blur(20px); 
             -webkit-backdrop-filter: saturate(180%) blur(20px);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); 
             display: flex; align-items: center; justify-content: center;
         }
         .nav-inner {
-            width: 100%; max-width: 980px; padding: 0 20px;
+            width: 100%; max-width: 980px; padding: 0 20px; 
             display: flex; justify-content: space-between; align-items: center;
         }
-        .logo { font-size: 18px; font-weight: 600; text-decoration: none; color: var(--text-main); letter-spacing: -0.01em; }
+        .logo { 
+            font-size: 18px; font-weight: 600; text-decoration: none; 
+            color: var(--text-main); letter-spacing: -0.01em; 
+        }
         .nav-links a {
-            font-size: 12px; font-weight: 400; text-decoration: none; color: var(--text-main);
-            margin-left: 30px; opacity: 0.8; transition: opacity 0.3s;
+            font-size: 12px; text-decoration: none; color: var(--text-main); 
+            margin-left: 24px; opacity: 0.8; transition: opacity 0.3s;
         }
         .nav-links a:hover { opacity: 1; }
 
-        /* --- Hero Section --- */
+        /* --- 全体のレイアウトコンテナ --- */
+        .container { 
+            width: 100%; max-width: 900px; margin: 0 auto; padding: 100px 20px 80px; 
+        }
+
+        /* --- ヒーローセクション --- */
         .hero {
-            text-align: center; padding: 160px 20px 100px;
-            background-color: var(--bg-color);
+            text-align: center; padding: 60px 20px 80px;
         }
         .hero-badge {
-            display: inline-block; font-size: 12px; font-weight: 600; color: var(--accent);
-            letter-spacing: 0.05em; margin-bottom: 16px; text-transform: uppercase;
+            display: inline-block; font-size: 14px; font-weight: 600; 
+            color: var(--accent-orange); letter-spacing: 0.05em; 
+            margin-bottom: 16px; text-transform: uppercase;
         }
         .hero h1 {
-            font-size: clamp(48px, 8vw, 80px); font-weight: 700; letter-spacing: -0.015em;
-            margin-bottom: 20px; line-height: 1.05;
+            font-size: clamp(32px, 6vw, 56px); font-weight: 700; 
+            letter-spacing: -0.015em; margin-bottom: 24px; line-height: 1.2;
         }
         .hero p {
-            font-size: clamp(18px, 3vw, 28px); font-weight: 400; color: var(--text-muted);
-            max-width: 700px; margin: 0 auto 40px; line-height: 1.4;
+            font-size: clamp(16px, 2.5vw, 20px); font-weight: 400; color: var(--text-muted);
+            max-width: 700px; margin: 0 auto 40px; line-height: 1.6;
         }
-        .btn-primary {
-            display: inline-block; background: var(--text-main); color: #fff;
-            padding: 14px 28px; border-radius: 980px; font-size: 17px; font-weight: 400;
-            text-decoration: none; transition: transform 0.3s, background 0.3s;
+        
+        /* --- イメージ画像エリア --- */
+        .hero-image-wrapper {
+            position: relative;
+            max-width: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            margin-bottom: 60px;
         }
-        .btn-primary:hover { background: #000; transform: scale(1.02); }
-        .hero-image {
-            max-width: 980px; margin: 60px auto 0; padding: 0 20px;
-        }
-        .hero-image img {
-            width: 100%; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+        .hero-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
             object-fit: cover;
         }
+        /* 画像の上に重ねるHUD風の装飾（青みがかったオーバーレイ） */
+        .hero-image-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,102,204,0.1) 0%, rgba(0,0,0,0.3) 100%);
+            pointer-events: none;
+        }
+        .hud-ui-mockup {
+            position: absolute;
+            bottom: 30px; left: 30px;
+            color: #00ffcc;
+            font-family: monospace;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
+            pointer-events: none;
+        }
 
-        /* --- Features Section (Expanded) --- */
-        .features {
-            background-color: var(--section-bg); padding: 120px 20px; text-align: center;
+        /* --- メインカードスタイル --- */
+        .card {
+            background-color: var(--card-bg); border-radius: 24px; padding: 40px;
+            margin-bottom: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.04);
         }
-        .features h2 { font-size: 40px; font-weight: 600; margin-bottom: 60px; letter-spacing: -0.01em; }
-        .feature-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px; max-width: 980px; margin: 0 auto;
+        .card-header { 
+            font-size: 26px; font-weight: 600; margin-bottom: 24px; 
+            padding-bottom: 16px; border-bottom: 1px solid var(--border); 
         }
-        .feature-card {
-            background: #fff; padding: 50px 30px; border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03); text-align: left;
-            height: 100%;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .feature-icon {
-            width: 48px; height: 48px; background: #f5f5f7; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 24px;
-        }
-        .feature-card h3 { font-size: 24px; font-weight: 600; margin-bottom: 12px; }
-        .feature-card p { font-size: 16px; color: var(--text-muted); line-height: 1.6; }
 
-        /* --- リンク用カードのスタイル --- */
-        .feature-card-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
+        /* --- 進捗状況バー --- */
+        .progress-wrapper { margin-bottom: 30px; }
+        .progress-info { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+        .progress-label { font-size: 16px; font-weight: 600; }
+        .progress-percent { font-size: 36px; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+        .progress-track { width: 100%; height: 12px; background-color: #e5e5ea; border-radius: 99px; overflow: hidden; }
+        .progress-fill { width: 30%; height: 100%; background-color: var(--accent); border-radius: 99px; }
+
+        /* --- タスク一覧のグリッド --- */
+        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; list-style: none; }
+        .task-item {
+            padding: 16px 20px; background: var(--bg-color); border-radius: 16px; font-size: 14px; font-weight: 500;
+            display: flex; align-items: center; border: 1px solid transparent; color: var(--text-muted);
         }
-        /* 追加: ホバー時のアニメーション効果 */
-        .feature-card-link:hover .feature-card {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        .task-item.done { background: #f0f8ff; border-color: #cce5ff; color: var(--accent); }
+        .task-item span { margin-right: 12px; font-size: 16px; }
+
+        /* --- タイムライン（活動報告） --- */
+        .timeline { position: relative; padding-left: 24px; }
+        .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 0; width: 2px; background: #e5e5ea; }
+        .timeline-item { position: relative; margin-bottom: 40px; }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -29px; top: 6px; width: 12px; height: 12px;
+            border-radius: 50%; background: var(--card-bg); border: 2px solid var(--accent);
         }
+        .timeline-date { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; display: block; }
+        .timeline-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .timeline-content { font-size: 15px; color: #515154; line-height: 1.6; }
+        .timeline-content ul { margin: 12px 0 0 24px; color: var(--text-muted); font-size: 14px; }
+        .timeline-content li { margin-bottom: 4px; }
+
+        /* --- 今後の予定（ナンバリングリスト） --- */
+        .ordered-list { list-style: none; counter-reset: custom-counter; }
+        .ordered-list li {
+            position: relative; padding-left: 48px; margin-bottom: 20px; font-size: 16px; font-weight: 500;
+        }
+        .ordered-list li:last-child { margin-bottom: 0; }
+        .ordered-list li::before {
+            content: counter(custom-counter); counter-increment: custom-counter;
+            position: absolute; left: 0; top: -2px; width: 28px; height: 28px;
+            background: var(--text-main); color: #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600;
+        }
+
+        /* --- フッター --- */
+        footer { text-align: center; color: var(--text-muted); font-size: 12px; padding: 60px 20px 40px; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="nav-inner">
-            <a href="#" class="logo">HUD PROJECT</a>
+            <a href="#" class="logo">課題研究2班 | HUD Project</a>
             <nav class="nav-links">
-                <a href="#hero">Home</a>
-                <a href="#features">Features</a>
+                <a href="#status">進捗状況</a>
+                <a href="#report">活動報告</a>
+                <a href="#future">今後の予定</a>
             </nav>
         </div>
     </header>
 
-    <main>
-        <section id="hero" class="hero animate-up">
-            <span class="hero-badge">New Innovation</span>
-            <h1>次世代の視界へ。</h1>
-            <p>日常のあらゆる情報を、あなたの目の前にシームレスに展開します。</p>
-            <a href="#features" class="btn-primary">さらに詳しく</a>
-            <div class="hero-image">
-                <img src="https://via.placeholder.com/980x500/eaeaea/86868b?text=HUD+Project+Image" alt="HUD Project Visual">
+    <div class="container">
+
+        <section class="hero animate-up">
+            <span class="hero-badge">課題研究2班 発表内容</span>
+            <h1>HUD PROJECT<br>次世代のドライブ体験を創出する</h1>
+            <p>私たち2班は「HUD（ヘッドアップディスプレイ） PROJECT」を通じ、車の運転中に視線を外すことなくナビゲーションや安全情報をフロントガラスに投影するシステムの開発と研究を行っています。</p>
+            
+            <div class="hero-image-wrapper">
+                <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="車の運転席とHUDイメージ">
+                <div class="hero-image-overlay"></div>
+                <div class="hud-ui-mockup">
+                    <div style="font-size: 14px; margin-bottom: 4px;">SPEED</div>
+                    65 km/h
+                </div>
             </div>
         </section>
 
-        <section id="features" class="features animate-up">
-            <h2>Core Features</h2>
-            <div class="feature-grid">
-                <a href="#" class="feature-card-link">
-                    <div class="feature-card">
-                        <div class="feature-icon">👁️</div>
-                        <h3>クリアな視認性</h3>
-                        <p>透過型の高精細ディスプレイにより、現実空間を遮ることなく必要な情報だけを鮮明に映し出します。</p>
-                    </div>
-                </a>
+        <section id="status" class="card animate-up" style="animation-delay: 0.2s;">
+            <h2 class="card-header">現在の進捗状況</h2>
+            <div class="progress-wrapper">
+                <div class="progress-info">
+                    <span class="progress-label">全体の開発プロセス</span>
+                    <span class="progress-percent">30%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <ul class="task-grid">
+                <li class="task-item done"><span>●</span> 研究テーマ決定</li>
+                <li class="task-item done"><span>●</span> 設計図作成</li>
+                <li class="task-item done"><span>●</span> 部品選定</li>
+                <li class="task-item done"><span>●</span> M5StickS3動作確認</li>
+                <li class="task-item"><span>○</span> HUDグラス本体製作</li>
+                <li class="task-item"><span>○</span> 表示プログラム作成</li>
+            </ul>
+        </section>
+
+        <section id="report" class="card animate-up" style="animation-delay: 0.4s;">
+            <h2 class="card-header">活動報告</h2>
+            <div class="timeline">
                 
-                <a href="#" class="feature-card-link">
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3>ゼロ・レイテンシ</h3>
-                        <p>M5StickS3と最適化されたプログラムにより、遅延のないリアルタイムなデータ描画を実現します。</p>
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 1</span>
+                    <h3 class="timeline-title">第1回活動：プロジェクトの立ち上げ</h3>
+                    <div class="timeline-content">
+                        2班のメンバーで課題研究のテーマについて話し合い、どのような作品を製作するかを検討しました。車の運転をより安全で快適にするアイデアとして、最終的にHUDを製作することに決定しました。
                     </div>
-                </a>
+                </div>
+                
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 2</span>
+                    <h3 class="timeline-title">第2回活動：設計図作成とマテリアル選定</h3>
+                    <div class="timeline-content">
+                        HUDを製作するためのプロトタイプ設計図を作成し、必要な部品や材料について詳細に検討を行いました。
+                        <ul>
+                            <li>M5StickS3（メインマイコン）</li>
+                            <li>カードルーペ拡大シート</li>
+                            <li>アクリル板（210×297×1mm）× 3枚</li>
+                            <li>ヘッドアップディスプレー（HUD）用光学フィルム</li>
+                        </ul>
+                    </div>
+                </div>
 
-                <a href="#" class="feature-card-link">
-                    <div class="feature-card">
-                        <div class="feature-icon">🛠️</div>
-                        <h3>シームレスな統合</h3>
-                        <p>GitHubによる管理とArduino連携により、今後の拡張やアップデートにも柔軟に対応可能です。</p>
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 3</span>
+                    <h3 class="timeline-title">第3回活動：基盤ハードウェアの動作検証</h3>
+                    <div class="timeline-content">
+                        M5StickS3の初期動作確認を行いました。テスト用のプロトタイプコードをビルドし、画面全体を赤色に表示する実験を実施。正常に描画されることを確認し、システムの中核となるマイコンが問題なく動作する実証を得ました。
                     </div>
-                </a>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 4</span>
+                    <h3 class="timeline-title">第4回活動：GitHubの修正とArduino動作確認</h3>
+                    <div class="timeline-content">
+                        管理用GitHubのファイル構成の見直しと内容修正を行いました。また、制御システムとの連携を想定し、Arduino（アルディーノ）の基本的な通電テストおよび動作確認を実施しました。
+                    </div>
+                </div>
+
             </div>
         </section>
-    </main>
+
+        <section id="future" class="card animate-up" style="animation-delay: 0.6s;">
+            <h2 class="card-header">今後のロードマップ</h2>
+            <ol class="ordered-list">
+                <li>HUD本体フレームの製作と組み上げ</li>
+                <li>アクリル板およびHUDフィルムの高精度なカッティングと加工</li>
+                <li>M5StickS3用 HUD情報表示ソフトウェアの開発</li>
+                <li>実機における動作テストとフィードバックに基づく改良</li>
+                <li>2班 最終プレゼンテーション用ドキュメントの作成</li>
+            </ol>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 課題研究2班 HUD PROJECT. All rights reserved.</p>
+    </footer>
 
 </body>
 </html>
