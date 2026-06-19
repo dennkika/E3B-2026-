@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HUD PROJECT | 課題研究2班</title>
     <style>
-        /* --- デザインの共通設定 --- */
+        /* --- 1. 全体カラー・フォント設定 --- */
         :root {
             --bg-color: #fbfbfd;
             --card-bg: #ffffff;
@@ -13,6 +13,7 @@
             --text-muted: #86868b;
             --accent: #0066cc;
             --accent-orange: #ff6b00;
+            --hud-glow: #00ffcc; /* HUDのネオンカラー */
             --border: #d2d2d7;
         }
 
@@ -23,7 +24,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
             background-color: var(--bg-color); 
             color: var(--text-main); 
-            line-height: 1.5; 
+            line-height: 1.6; 
             -webkit-font-smoothing: antialiased;
         }
 
@@ -36,7 +37,7 @@
             animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
         }
 
-        /* --- ヘッダーナビゲーション --- */
+        /* --- 2. ヘッダーナビゲーション --- */
         header {
             position: fixed; top: 0; width: 100%; height: 52px;
             background: rgba(255, 255, 255, 0.7); 
@@ -59,12 +60,12 @@
         }
         .nav-links a:hover { opacity: 1; }
 
-        /* --- 全体のレイアウトコンテナ --- */
+        /* --- 3. レイアウトコンテナ --- */
         .container { 
             width: 100%; max-width: 900px; margin: 0 auto; padding: 100px 20px 80px; 
         }
 
-        /* --- ヒーローセクション --- */
+        /* --- 4. ヒーローセクション（タイトル周り） --- */
         .hero {
             text-align: center; padding: 60px 20px 80px;
         }
@@ -79,43 +80,80 @@
         }
         .hero p {
             font-size: clamp(16px, 2.5vw, 20px); font-weight: 400; color: var(--text-muted);
-            max-width: 700px; margin: 0 auto 40px; line-height: 1.6;
+            max-width: 700px; margin: 0 auto 40px; 
         }
         
-        /* --- イメージ画像エリア --- */
+        /* --- 5. リアルなHUD画像エリア --- */
         .hero-image-wrapper {
             position: relative;
-            max-width: 100%;
+            width: 100%;
+            height: 500px; /* 画像の高さを固定して視界を強調 */
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
             margin-bottom: 60px;
+            background-color: #000;
         }
+        /* 一人称視点のドライブ背景画像 */
         .hero-image-wrapper img {
             width: 100%;
-            height: auto;
-            display: block;
+            height: 100%;
             object-fit: cover;
+            object-position: center 60%; /* 視線を少し道路寄りに調整 */
+            opacity: 0.85; /* 夜間のHUDを目立たせるために少し暗く */
         }
-        /* 画像の上に重ねるHUD風の装飾（青みがかったオーバーレイ） */
-        .hero-image-overlay {
+        
+        /* 投影用コンテナ（遠近感をつけるため perspective を設定） */
+        .hud-projection-area {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(0,102,204,0.1) 0%, rgba(0,0,0,0.3) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 800px; /* 3D空間の奥行き */
             pointer-events: none;
         }
-        .hud-ui-mockup {
-            position: absolute;
-            bottom: 30px; left: 30px;
-            color: #00ffcc;
-            font-family: monospace;
-            font-size: 24px;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
-            pointer-events: none;
+        
+        /* 実際にガラスに浮かび上がるHUD UI群 */
+        .hud-ui {
+            width: 80%;
+            height: 60%;
+            transform: rotateX(15deg) translateY(-30px); /* フロントガラスの傾きを再現 */
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            color: var(--hud-glow);
+            font-family: "Courier New", Courier, monospace;
+            text-shadow: 0 0 5px rgba(0, 255, 204, 0.5), 0 0 15px rgba(0, 255, 204, 0.8);
         }
+        
+        /* 各HUD要素のデザイン */
+        .hud-left {
+            text-align: left;
+            border-left: 3px solid var(--hud-glow);
+            padding-left: 10px;
+            box-shadow: -10px 0 15px -10px var(--hud-glow);
+        }
+        .hud-speed-value { font-size: 56px; font-weight: bold; line-height: 1; }
+        .hud-speed-unit { font-size: 16px; letter-spacing: 2px; }
+        
+        .hud-center {
+            text-align: center;
+            padding-bottom: 40px;
+        }
+        .hud-nav-arrow { font-size: 64px; line-height: 0.8; }
+        .hud-nav-text { font-size: 18px; font-weight: bold; }
+        
+        .hud-right {
+            text-align: right;
+            border-right: 3px solid var(--hud-glow);
+            padding-right: 10px;
+            box-shadow: 10px 0 15px -10px var(--hud-glow);
+        }
+        .hud-time { font-size: 24px; font-weight: bold; }
+        .hud-temp { font-size: 16px; }
 
-        /* --- メインカードスタイル --- */
+        /* --- 6. メインカードスタイル --- */
         .card {
             background-color: var(--card-bg); border-radius: 24px; padding: 40px;
             margin-bottom: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.04);
@@ -125,7 +163,7 @@
             padding-bottom: 16px; border-bottom: 1px solid var(--border); 
         }
 
-        /* --- 進捗状況バー --- */
+        /* --- 7. 進捗状況バー --- */
         .progress-wrapper { margin-bottom: 30px; }
         .progress-info { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
         .progress-label { font-size: 16px; font-weight: 600; }
@@ -133,7 +171,7 @@
         .progress-track { width: 100%; height: 12px; background-color: #e5e5ea; border-radius: 99px; overflow: hidden; }
         .progress-fill { width: 30%; height: 100%; background-color: var(--accent); border-radius: 99px; }
 
-        /* --- タスク一覧のグリッド --- */
+        /* --- 8. タスク一覧 --- */
         .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; list-style: none; }
         .task-item {
             padding: 16px 20px; background: var(--bg-color); border-radius: 16px; font-size: 14px; font-weight: 500;
@@ -142,7 +180,7 @@
         .task-item.done { background: #f0f8ff; border-color: #cce5ff; color: var(--accent); }
         .task-item span { margin-right: 12px; font-size: 16px; }
 
-        /* --- タイムライン（活動報告） --- */
+        /* --- 9. タイムライン（活動報告） --- */
         .timeline { position: relative; padding-left: 24px; }
         .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 0; width: 2px; background: #e5e5ea; }
         .timeline-item { position: relative; margin-bottom: 40px; }
@@ -153,11 +191,11 @@
         }
         .timeline-date { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; display: block; }
         .timeline-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-        .timeline-content { font-size: 15px; color: #515154; line-height: 1.6; }
+        .timeline-content { font-size: 15px; color: #515154; }
         .timeline-content ul { margin: 12px 0 0 24px; color: var(--text-muted); font-size: 14px; }
         .timeline-content li { margin-bottom: 4px; }
 
-        /* --- 今後の予定（ナンバリングリスト） --- */
+        /* --- 10. 今後の予定 --- */
         .ordered-list { list-style: none; counter-reset: custom-counter; }
         .ordered-list li {
             position: relative; padding-left: 48px; margin-bottom: 20px; font-size: 16px; font-weight: 500;
@@ -170,7 +208,7 @@
             display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600;
         }
 
-        /* --- フッター --- */
+        /* --- 11. フッター --- */
         footer { text-align: center; color: var(--text-muted); font-size: 12px; padding: 60px 20px 40px; }
     </style>
 </head>
@@ -195,11 +233,25 @@
             <p>私たち2班は「HUD（ヘッドアップディスプレイ） PROJECT」を通じ、車の運転中に視線を外すことなくナビゲーションや安全情報をフロントガラスに投影するシステムの開発と研究を行っています。</p>
             
             <div class="hero-image-wrapper">
-                <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="車の運転席とHUDイメージ">
-                <div class="hero-image-overlay"></div>
-                <div class="hud-ui-mockup">
-                    <div style="font-size: 14px; margin-bottom: 4px;">SPEED</div>
-                    65 km/h
+                <img src="https://images.unsplash.com/photo-1503370622521-2e68400032bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="一人称視点のドライブ風景">
+                
+                <div class="hud-projection-area">
+                    <div class="hud-ui">
+                        <div class="hud-left">
+                            <div class="hud-speed-value">65</div>
+                            <div class="hud-speed-unit">KM/H</div>
+                        </div>
+                        
+                        <div class="hud-center">
+                            <div class="hud-nav-arrow">↱</div>
+                            <div class="hud-nav-text">150m AHEAD</div>
+                        </div>
+                        
+                        <div class="hud-right">
+                            <div class="hud-time">19:42</div>
+                            <div class="hud-temp">EXT 14°C</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
