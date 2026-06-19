@@ -7,7 +7,7 @@
     <style>
         /* --- Base & Reset --- */
         :root {
-            --bg-color: #fbfbfd; /* Apple特有のほんのりグレーな背景 */
+            --bg-color: #fbfbfd;
             --card-bg: #ffffff;
             --text-main: #1d1d1f;
             --text-muted: #86868b;
@@ -52,7 +52,8 @@
         .progress-label { font-size: 16px; font-weight: 600; }
         .progress-percent { font-size: 40px; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
         .progress-track { width: 100%; height: 12px; background-color: #e5e5ea; border-radius: 99px; overflow: hidden; }
-        .progress-fill { width: 50%; height: 100%; background-color: var(--accent); border-radius: 99px; transition: width 1s ease-in-out; }
+        /* 50%から30%に修正 */
+        .progress-fill { width: 30%; height: 100%; background-color: var(--accent); border-radius: 99px; transition: width 1s ease-in-out; }
 
         /* --- Task Grid --- */
         .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; list-style: none; }
@@ -116,7 +117,7 @@
             <div class="progress-wrapper">
                 <div class="progress-info">
                     <span class="progress-label">全体の開発プロセス</span>
-                    <span class="progress-percent">50%</span>
+                    <span class="progress-percent">30%</span>
                 </div>
                 <div class="progress-track">
                     <div class="progress-fill"></div>
@@ -163,6 +164,14 @@
                     <h3 class="timeline-title">第3回活動：基盤ハードウェアの動作検証</h3>
                     <div class="timeline-content">
                         M5StickS3の初期動作確認を行いました。テスト用のプロトタイプコードをビルドし、画面全体を赤色に表示する実験を実施。正常に描画されることを確認し、システムの中核となるマイコンが問題なく動作する実証を得ました。
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 4</span>
+                    <h3 class="timeline-title">第4回活動：GitHubの修正とArduinoの動作確認</h3>
+                    <div class="timeline-content">
+                        プロジェクト管理用GitHubのリポジトリ内容の修正と整理を行いました。併せて、HUD制御に向けたArduino（アルディーノ）の基本的な動作確認を実施し、今後のプログラム開発環境を整えました。
                     </div>
                 </div>
             </div>
