@@ -15,6 +15,13 @@
             --border: #d2d2d7;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* スムーズスクロールとヘッダー被り防止を追加 */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px; 
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
             background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; -webkit-font-smoothing: antialiased;
@@ -43,6 +50,13 @@
         .card {
             background-color: var(--card-bg); border-radius: 24px; padding: 48px;
             margin-bottom: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            /* ホバーエフェクト用のトランジションを追加 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        /* マウスオーバー時に少し浮き上がるエフェクトを追加 */
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.08);
         }
         .card-header { font-size: 28px; font-weight: 600; margin-bottom: 30px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
 
@@ -52,8 +66,19 @@
         .progress-label { font-size: 16px; font-weight: 600; }
         .progress-percent { font-size: 40px; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
         .progress-track { width: 100%; height: 12px; background-color: #e5e5ea; border-radius: 99px; overflow: hidden; }
-        /* 50%から30%に修正 */
-        .progress-fill { width: 30%; height: 100%; background-color: var(--accent); border-radius: 99px; transition: width 1s ease-in-out; }
+        
+        /* 読み込み時のアニメーションを追加 (30%から40%へ変更) */
+        @keyframes fillProgress {
+            0% { width: 0; }
+            100% { width: 40%; }
+        }
+        .progress-fill { 
+            width: 40%; 
+            height: 100%; 
+            background-color: var(--accent); 
+            border-radius: 99px; 
+            animation: fillProgress 1.2s ease-out forwards;
+        }
 
         /* --- Task Grid --- */
         .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; list-style: none; }
@@ -117,7 +142,7 @@
             <div class="progress-wrapper">
                 <div class="progress-info">
                     <span class="progress-label">全体の開発プロセス</span>
-                    <span class="progress-percent">30%</span>
+                    <span class="progress-percent">40%</span> <!-- 30%から40%に変更 -->
                 </div>
                 <div class="progress-track">
                     <div class="progress-fill"></div>
@@ -174,6 +199,17 @@
                         プロジェクト管理用GitHubのリポジトリ内容の修正と整理を行いました。併せて、HUD制御に向けたArduino（アルディーノ）の基本的な動作確認を実施し、今後のプログラム開発環境を整えました。
                     </div>
                 </div>
+
+                <!-- ▼追加した第5回活動報告▼ -->
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 5</span>
+                    <h3 class="timeline-title">第5回活動：Arduinoと外部コントロールの動作確認</h3>
+                    <div class="timeline-content">
+                        Arduino（アルディーノ）と外部コントロールを用いた動作確認を実施しました。外部デバイスからの入力に応じた制御テストを行い、システム全体の連携に向けた重要なステップをクリアしました。
+                    </div>
+                </div>
+                <!-- ▲追加した第5回活動報告▲ -->
+
             </div>
         </section>
 
