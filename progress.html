@@ -5,18 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HUD PROJECT</title>
     <style>
-        /* --- Base & Reset --- */
+        /* --- Base & Reset (Universal Design) --- */
         :root {
-            --bg-color: #ffffff;
-            --text-main: #111111;
-            --text-muted: #666666;
-            --border: #e0e0e0;
-            --font-en: "Helvetica Neue", Arial, sans-serif;
-            --font-ja: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", serif;
+            /* 目が疲れにくいオフホワイトとダークグレーの組み合わせ */
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #595959;
+            --border: #d1d5db;
+            /* 色覚特性を問わず識別しやすいUDブルー */
+            --accent: #1d4ed8; 
+            /* 誰にでも読みやすいゴシック体ベースのフォントスタック */
+            --font-main: "Helvetica Neue", Arial, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: var(--font-en);
+            font-family: var(--font-main);
             background-color: var(--bg-color); 
             color: var(--text-main); 
             line-height: 1.8; 
@@ -26,9 +30,6 @@
         body.loaded {
             overflow: auto; /* ローディング完了後にスクロール許可 */
         }
-        
-        /* 日本語用フォント設定 */
-        .ja-text { font-family: var(--font-ja); }
 
         /* --- Opening Animation (Loader) --- */
         #loader {
@@ -42,7 +43,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* スライドアウトのアニメーション */
             transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1), opacity 0.8s ease;
         }
         .loader-content {
@@ -50,9 +50,9 @@
         }
         .loader-text {
             display: block;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
-            letter-spacing: 0.25em;
+            letter-spacing: 0.2em;
             color: var(--text-main);
             margin-bottom: 15px;
             opacity: 0;
@@ -61,9 +61,10 @@
         }
         .loader-line {
             width: 0;
-            height: 1px;
-            background-color: var(--text-main);
+            height: 3px;
+            background-color: var(--accent); /* ローダーの線をアクセントカラーに */
             margin: 0 auto;
+            border-radius: 2px;
             animation: lineGrow 1s cubic-bezier(0.215, 0.61, 0.355, 1) 0.6s forwards;
         }
 
@@ -75,7 +76,6 @@
             100% { width: 100px; }
         }
 
-        /* ローディング完了時に付与されるクラス */
         body.loaded #loader {
             transform: translateY(-100%);
             opacity: 0;
@@ -85,7 +85,8 @@
         /* --- Header --- */
         header {
             position: fixed; top: 0; width: 100%; height: 70px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(248, 249, 250, 0.95);
+            backdrop-filter: blur(10px);
             z-index: 1000; border-bottom: 1px solid var(--border); 
             display: flex; align-items: center; justify-content: center;
         }
@@ -96,19 +97,19 @@
         .logo { font-size: 18px; font-weight: bold; text-decoration: none; color: var(--text-main); letter-spacing: 0.1em; }
         .nav-links { display: flex; gap: 40px; }
         .nav-links a {
-            font-size: 13px; text-decoration: none; color: var(--text-muted); 
-            letter-spacing: 0.1em; font-weight: bold; transition: color 0.3s;
+            font-size: 14px; text-decoration: none; color: var(--text-muted); 
+            letter-spacing: 0.05em; font-weight: bold; transition: color 0.3s;
             position: relative; padding: 25px 0;
         }
-        .nav-links a:hover, .nav-links a.active { color: var(--text-main); }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
         .nav-links a.active::after {
-            content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; background: var(--text-main);
+            content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: var(--accent);
+            border-radius: 3px 3px 0 0;
         }
 
         /* --- Layout --- */
         .container { max-width: 900px; margin: 0 auto; padding: 140px 40px 100px; min-height: calc(100vh - 80px); }
         
-        /* SPA風のページ切り替え設定 */
         .page-section { display: none; animation: fadeIn 0.4s ease-out forwards; }
         .page-section.active { display: block; }
         @keyframes fadeIn { 
@@ -116,52 +117,52 @@
             to { opacity: 1; transform: translateY(0); } 
         }
 
-        .section-header { margin-bottom: 70px; text-align: center; }
-        .section-en { font-size: 13px; color: var(--text-muted); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 15px; display: block; }
-        .section-jp { font-size: 32px; font-weight: normal; letter-spacing: 0.1em; }
+        .section-header { margin-bottom: 60px; text-align: center; }
+        .section-en { font-size: 14px; color: var(--text-muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; display: block; font-weight: bold; }
+        .section-jp { font-size: 32px; font-weight: bold; letter-spacing: 0.05em; color: var(--text-main); }
 
         /* --- Progress Section (#status) --- */
-        .progress-wrapper { margin-bottom: 60px; border-bottom: 1px solid var(--border); padding-bottom: 40px; }
+        .progress-wrapper { margin-bottom: 60px; background: var(--card-bg); padding: 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
         .progress-info { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
-        .progress-label { font-size: 18px; letter-spacing: 0.05em; }
-        .progress-percent { font-size: 64px; font-weight: 300; line-height: 1; letter-spacing: -0.02em; }
-        .progress-track { width: 100%; height: 1px; background-color: var(--border); position: relative; }
-        .progress-fill { position: absolute; left: 0; top: -1px; height: 3px; background-color: var(--text-main); width: 0; transition: width 1.5s cubic-bezier(0.215, 0.61, 0.355, 1); }
-        body.loaded .progress-fill { width: 40%; } /* アニメーション後にバーが伸びる */
+        .progress-label { font-size: 18px; font-weight: bold; }
+        .progress-percent { font-size: 56px; font-weight: bold; line-height: 1; color: var(--accent); }
+        .progress-track { width: 100%; height: 8px; background-color: #e5e7eb; position: relative; border-radius: 4px; overflow: hidden; }
+        .progress-fill { position: absolute; left: 0; top: 0; height: 100%; background-color: var(--accent); width: 0; transition: width 1.5s cubic-bezier(0.215, 0.61, 0.355, 1); border-radius: 4px; }
+        body.loaded .progress-fill { width: 40%; } 
 
-        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-        .task-item { padding: 30px; background: #fff; font-size: 15px; display: flex; align-items: center; justify-content: space-between; letter-spacing: 0.05em; }
-        .task-item.done { color: var(--text-muted); }
-        .task-item span.status { font-size: 11px; letter-spacing: 0.15em; border: 1px solid var(--border); padding: 6px 12px; }
-        .task-item.done span.status { background: var(--text-main); color: #fff; border-color: var(--text-main); }
+        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+        .task-item { padding: 25px; background: var(--card-bg); font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .task-item.done { background-color: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+        .task-item span.status { font-size: 12px; font-weight: bold; letter-spacing: 0.1em; border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; background: #f9fafb; }
+        .task-item.done span.status { background: #16a34a; color: #fff; border-color: #16a34a; }
 
         /* --- Report Section (#report) --- */
         .timeline { position: relative; padding-left: 30px; }
-        .timeline::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 0; width: 1px; background: var(--border); }
-        .timeline-item { position: relative; margin-bottom: 70px; }
+        .timeline::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 0; width: 4px; background: #e5e7eb; border-radius: 2px; }
+        .timeline-item { position: relative; margin-bottom: 60px; background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .timeline-item:last-child { margin-bottom: 0; }
         .timeline-item::before {
-            content: ''; position: absolute; left: -34px; top: 6px; width: 9px; height: 9px; background: var(--text-main);
+            content: ''; position: absolute; left: -37px; top: 40px; width: 18px; height: 18px; background: var(--accent); border: 4px solid var(--bg-color); border-radius: 50%;
         }
-        .timeline-date { font-size: 12px; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: 15px; display: block; font-weight: bold; }
-        .timeline-title { font-size: 22px; margin-bottom: 25px; font-weight: normal; letter-spacing: 0.05em; }
-        .timeline-content { font-size: 15px; color: var(--text-muted); line-height: 2; letter-spacing: 0.05em; }
-        .timeline-content ul { margin: 20px 0 0 20px; padding: 0; list-style-type: square; }
-        .timeline-content li { margin-bottom: 10px; }
+        .timeline-date { font-size: 13px; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 10px; display: block; font-weight: bold; }
+        .timeline-title { font-size: 20px; margin-bottom: 20px; font-weight: bold; }
+        .timeline-content { font-size: 16px; color: var(--text-muted); line-height: 1.8; }
+        .timeline-content ul { margin: 15px 0 0 25px; padding: 0; list-style-type: disc; }
+        .timeline-content li { margin-bottom: 8px; }
 
         /* --- Future Section (#future) --- */
-        .future-list { list-style: none; counter-reset: future-counter; border-top: 1px solid var(--border); }
+        .future-list { list-style: none; counter-reset: future-counter; }
         .future-list li {
-            position: relative; padding: 45px 0 45px 100px; border-bottom: 1px solid var(--border);
-            font-size: 20px; letter-spacing: 0.05em;
+            position: relative; padding: 35px 30px 35px 90px; margin-bottom: 16px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            font-size: 18px; font-weight: bold; display: flex; align-items: center;
         }
         .future-list li::before {
             content: "0" counter(future-counter); counter-increment: future-counter;
-            position: absolute; left: 0; top: 40px; font-size: 28px; font-weight: 300; color: var(--border); letter-spacing: 0.05em; font-family: var(--font-en);
+            position: absolute; left: 30px; font-size: 24px; font-weight: bold; color: var(--accent);
         }
 
         /* --- Footer --- */
-        footer { text-align: center; color: var(--text-muted); font-size: 11px; padding: 50px 20px; border-top: 1px solid var(--border); letter-spacing: 0.15em; }
+        footer { text-align: center; color: var(--text-muted); font-size: 13px; padding: 40px 20px; border-top: 1px solid var(--border); letter-spacing: 0.05em; }
     </style>
 </head>
 <body>
@@ -190,12 +191,12 @@
         <section id="status" class="page-section">
             <div class="section-header">
                 <span class="section-en">Status</span>
-                <h1 class="section-jp ja-text">現在の進捗状況</h1>
+                <h1 class="section-jp">現在の進捗状況</h1>
             </div>
 
             <div class="progress-wrapper">
                 <div class="progress-info">
-                    <span class="progress-label ja-text">全体の開発プロセス</span>
+                    <span class="progress-label">全体の開発プロセス</span>
                     <span class="progress-percent">40%</span>
                 </div>
                 <div class="progress-track">
@@ -205,27 +206,27 @@
 
             <div class="task-grid">
                 <div class="task-item done">
-                    <span class="ja-text">研究テーマ決定</span>
+                    <span>研究テーマ決定</span>
                     <span class="status">DONE</span>
                 </div>
                 <div class="task-item done">
-                    <span class="ja-text">設計図作成</span>
+                    <span>設計図作成</span>
                     <span class="status">DONE</span>
                 </div>
                 <div class="task-item done">
-                    <span class="ja-text">部品選定</span>
+                    <span>部品選定</span>
                     <span class="status">DONE</span>
                 </div>
                 <div class="task-item done">
-                    <span class="ja-text">M5StickS3動作確認</span>
+                    <span>M5StickS3動作確認</span>
                     <span class="status">DONE</span>
                 </div>
                 <div class="task-item">
-                    <span class="ja-text">HUDグラス本体製作</span>
+                    <span>HUDグラス本体製作</span>
                     <span class="status">WIP</span>
                 </div>
                 <div class="task-item">
-                    <span class="ja-text">表示プログラム作成</span>
+                    <span>表示プログラム作成</span>
                     <span class="status">WIP</span>
                 </div>
             </div>
@@ -235,22 +236,22 @@
         <section id="report" class="page-section">
             <div class="section-header">
                 <span class="section-en">Report</span>
-                <h1 class="section-jp ja-text">活動報告</h1>
+                <h1 class="section-jp">活動報告</h1>
             </div>
 
             <div class="timeline">
                 <div class="timeline-item">
                     <span class="timeline-date">PHASE 1</span>
-                    <h3 class="timeline-title ja-text">第1回活動：プロジェクトの立ち上げ</h3>
-                    <div class="timeline-content ja-text">
+                    <h3 class="timeline-title">第1回活動：プロジェクトの立ち上げ</h3>
+                    <div class="timeline-content">
                         グループで課題研究のテーマについて話し合い、どのような作品を製作するかを検討しました。ブレインストーミングの結果、最終的にHUDグラスを製作することに決定しました。
                     </div>
                 </div>
                 
                 <div class="timeline-item">
                     <span class="timeline-date">PHASE 2</span>
-                    <h3 class="timeline-title ja-text">第2回活動：設計図作成とマテリアル選定</h3>
-                    <div class="timeline-content ja-text">
+                    <h3 class="timeline-title">第2回活動：設計図作成とマテリアル選定</h3>
+                    <div class="timeline-content">
                         HUDグラスを製作するためのプロトタイプ設計図を作成し、必要な部品や材料について詳細に検討を行いました。
                         <ul>
                             <li>M5StickS3（メインマイコン）</li>
@@ -263,24 +264,24 @@
 
                 <div class="timeline-item">
                     <span class="timeline-date">PHASE 3</span>
-                    <h3 class="timeline-title ja-text">第3回活動：基盤ハードウェアの動作検証</h3>
-                    <div class="timeline-content ja-text">
+                    <h3 class="timeline-title">第3回活動：基盤ハードウェアの動作検証</h3>
+                    <div class="timeline-content">
                         M5StickS3の初期動作確認を行いました。テスト用のプロトタイプコードをビルドし、画面全体を赤色に表示する実験を実施。正常に描画されることを確認し、システムの中核となるマイコンが問題なく動作する実証を得ました。
                     </div>
                 </div>
 
                 <div class="timeline-item">
                     <span class="timeline-date">PHASE 4</span>
-                    <h3 class="timeline-title ja-text">第4回活動：GitHubの修正とArduinoの動作確認</h3>
-                    <div class="timeline-content ja-text">
+                    <h3 class="timeline-title">第4回活動：GitHubの修正とArduinoの動作確認</h3>
+                    <div class="timeline-content">
                         プロジェクト管理用GitHubのリポジトリ内容の修正と整理を行いました。併せて、HUD制御に向けたArduino（アルディーノ）の基本的な動作確認を実施し、今後のプログラム開発環境を整えました。
                     </div>
                 </div>
 
                 <div class="timeline-item">
                     <span class="timeline-date">PHASE 5</span>
-                    <h3 class="timeline-title ja-text">第5回活動：Arduinoと外部コントロールの動作確認</h3>
-                    <div class="timeline-content ja-text">
+                    <h3 class="timeline-title">第5回活動：Arduinoと外部コントロールの動作確認</h3>
+                    <div class="timeline-content">
                         Arduino（アルディーノ）と外部コントロールを用いた動作確認を実施しました。外部デバイスからの入力に応じた制御テストを行い、システム全体の連携に向けた重要なステップをクリアしました。
                     </div>
                 </div>
@@ -291,10 +292,10 @@
         <section id="future" class="page-section">
             <div class="section-header">
                 <span class="section-en">Future</span>
-                <h1 class="section-jp ja-text">今後のロードマップ</h1>
+                <h1 class="section-jp">今後のロードマップ</h1>
             </div>
 
-            <ul class="future-list ja-text">
+            <ul class="future-list">
                 <li>HUDグラス本体フレームの製作と組み上げ</li>
                 <li>アクリル板およびHUDフィルムの高精度なカッティングと加工</li>
                 <li>M5StickS3用 HUD情報表示ソフトウェアの開発</li>
@@ -311,12 +312,10 @@
     <script>
         // オープニングアニメーションの制御
         window.addEventListener('load', () => {
-            // アニメーションを1.8秒見せてからローダーを非表示にする
             setTimeout(() => {
                 document.body.classList.add('loaded');
             }, 1800);
-            
-            navigate(); // 初回のページ表示セットアップ
+            navigate(); 
         });
 
         // SPA風のページ遷移ロジック
