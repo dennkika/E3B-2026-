@@ -21,9 +21,66 @@
             color: var(--text-main); 
             line-height: 1.8; 
             -webkit-font-smoothing: antialiased;
+            overflow: hidden; /* ローディング中はスクロール禁止 */
         }
-        /* 日本語用フォント設定（SAITOのような洗練された雰囲気を演出） */
+        body.loaded {
+            overflow: auto; /* ローディング完了後にスクロール許可 */
+        }
+        
+        /* 日本語用フォント設定 */
         .ja-text { font-family: var(--font-ja); }
+
+        /* --- Opening Animation (Loader) --- */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--bg-color);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* スライドアウトのアニメーション */
+            transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1), opacity 0.8s ease;
+        }
+        .loader-content {
+            text-align: center;
+        }
+        .loader-text {
+            display: block;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 0.25em;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: textReveal 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s forwards;
+        }
+        .loader-line {
+            width: 0;
+            height: 1px;
+            background-color: var(--text-main);
+            margin: 0 auto;
+            animation: lineGrow 1s cubic-bezier(0.215, 0.61, 0.355, 1) 0.6s forwards;
+        }
+
+        @keyframes textReveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes lineGrow {
+            0% { width: 0; }
+            100% { width: 100px; }
+        }
+
+        /* ローディング完了時に付与されるクラス */
+        body.loaded #loader {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
 
         /* --- Header --- */
         header {
@@ -69,7 +126,8 @@
         .progress-label { font-size: 18px; letter-spacing: 0.05em; }
         .progress-percent { font-size: 64px; font-weight: 300; line-height: 1; letter-spacing: -0.02em; }
         .progress-track { width: 100%; height: 1px; background-color: var(--border); position: relative; }
-        .progress-fill { position: absolute; left: 0; top: -1px; height: 3px; background-color: var(--text-main); width: 40%; }
+        .progress-fill { position: absolute; left: 0; top: -1px; height: 3px; background-color: var(--text-main); width: 0; transition: width 1.5s cubic-bezier(0.215, 0.61, 0.355, 1); }
+        body.loaded .progress-fill { width: 40%; } /* アニメーション後にバーが伸びる */
 
         .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
         .task-item { padding: 30px; background: #fff; font-size: 15px; display: flex; align-items: center; justify-content: space-between; letter-spacing: 0.05em; }
@@ -107,6 +165,14 @@
     </style>
 </head>
 <body>
+
+    <!-- ▼ オープニングローダー ▼ -->
+    <div id="loader">
+        <div class="loader-content">
+            <span class="loader-text">HUD PROJECT.</span>
+            <div class="loader-line"></div>
+        </div>
+    </div>
 
     <header>
         <div class="nav-inner">
@@ -243,38 +309,40 @@
     </footer>
 
     <script>
+        // オープニングアニメーションの制御
+        window.addEventListener('load', () => {
+            // アニメーションを1.8秒見せてからローダーを非表示にする
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 1800);
+            
+            navigate(); // 初回のページ表示セットアップ
+        });
+
         // SPA風のページ遷移ロジック
         function navigate() {
-            // URLのハッシュを取得（指定がない場合はデフォルトで #status にする）
             let hash = window.location.hash || '#status';
             
-            // すべてのセクションを非表示にする
             document.querySelectorAll('.page-section').forEach(sec => {
                 sec.classList.remove('active');
             });
-            // ナビゲーションのハイライト（アンダーライン）をすべて外す
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
 
-            // ハッシュに一致するセクションを表示する
             const targetSection = document.querySelector(hash);
             if (targetSection) {
                 targetSection.classList.add('active');
             }
 
-            // ハッシュに一致するナビゲーションリンクをハイライトする
             const targetLink = document.querySelector(`.nav-link[href="${hash}"]`);
             if (targetLink) {
                 targetLink.classList.add('active');
             }
             
-            // ページ遷移時に一番上にスクロールを戻す
             window.scrollTo(0, 0);
         }
 
-        // ページの初回読み込み時と、リンククリック（ハッシュ変更）時にnavigate関数を実行する
-        window.addEventListener('load', navigate);
         window.addEventListener('hashchange', navigate);
     </script>
 </body>
