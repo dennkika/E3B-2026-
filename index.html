@@ -128,7 +128,6 @@
         .progress-percent { font-size: 56px; font-weight: bold; line-height: 1; color: var(--accent); }
         .progress-track { width: 100%; height: 8px; background-color: #e5e7eb; position: relative; border-radius: 4px; overflow: hidden; }
         .progress-fill { position: absolute; left: 0; top: 0; height: 100%; background-color: var(--accent); width: 0; transition: width 1.5s cubic-bezier(0.215, 0.61, 0.355, 1); border-radius: 4px; }
-        body.loaded .progress-fill { width: 40%; } 
 
         .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
         .task-item { padding: 25px; background: var(--card-bg); font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
@@ -163,6 +162,25 @@
 
         /* --- Footer --- */
         footer { text-align: center; color: var(--text-muted); font-size: 13px; padding: 40px 20px; border-top: 1px solid var(--border); letter-spacing: 0.05em; }
+
+        /* --- 【二番】レスポンシブ対応 (スマートフォン向け表示最適化) --- */
+        @media (max-width: 600px) {
+            .nav-inner { padding: 0 20px; }
+            .nav-links { gap: 15px; }
+            .nav-links a { font-size: 13px; padding: 25px 0; }
+            .container { padding: 110px 20px 60px; }
+            .section-header { margin-bottom: 35px; }
+            .section-jp { font-size: 24px; }
+            .progress-wrapper { padding: 25px 20px; margin-bottom: 30px; }
+            .progress-percent { font-size: 40px; }
+            .task-grid { grid-template-columns: 1fr; }
+            .task-item { padding: 18px; font-size: 15px; }
+            .timeline { padding-left: 20px; }
+            .timeline-item { padding: 20px; margin-bottom: 35px; }
+            .timeline-item::before { left: -27px; width: 14px; height: 14px; }
+            .future-list li { padding: 20px 20px 20px 60px; font-size: 15px; }
+            .future-list li::before { left: 18px; font-size: 18px; }
+        }
     </style>
 </head>
 <body>
@@ -197,7 +215,8 @@
             <div class="progress-wrapper">
                 <div class="progress-info">
                     <span class="progress-label">全体の開発プロセス</span>
-                    <span class="progress-percent">40%</span>
+                    <!-- 一番の機能により、初期表示0%から自動計算して動的にカウントアップされます -->
+                    <span class="progress-percent">0%</span>
                 </div>
                 <div class="progress-track">
                     <div class="progress-fill"></div>
@@ -310,11 +329,26 @@
     </footer>
 
     <script>
+        // 【一番】進捗率の自動計算機能
+        function updateProgress() {
+            const tasks = document.querySelectorAll('.task-item');
+            const doneTasks = document.querySelectorAll('.task-item.done');
+            if (tasks.length === 0) return;
+
+            // DONEのタスク割合を計算 (%)
+            const percentage = Math.round((doneTasks.length / tasks.length) * 100);
+
+            // 画面の数値テキストとメーターバー幅へ反映
+            document.querySelector('.progress-percent').textContent = `${percentage}%`;
+            document.querySelector('.progress-fill').style.width = `${percentage}%`;
+        }
+
         // オープニングアニメーションの制御
         window.addEventListener('load', () => {
-            // 1000ミリ秒（1秒）経過後にローディング画面を開く（スライドさせて表示）
+            // 1000ミリ秒（1秒）経過後にローディング画面を開く
             setTimeout(() => {
                 document.body.classList.add('loaded');
+                updateProgress(); // ローディング終了時に進捗バーを伸ばす
             }, 1000);
             navigate(); 
         });
