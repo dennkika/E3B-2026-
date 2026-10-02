@@ -3,229 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUD PROJECT | 課題研究2班</title>
+    <title>HUD PROJECT</title>
     <style>
-        /* --- 1. 全体カラー・フォント設定 (ライトテーマに戻しました) --- */
+        /* --- Base & Reset (Universal Design) --- */
         :root {
-            --bg-color: #fbfbfd;      /* Apple風の洗練された背景色 */
-            --card-bg: #ffffff;       /* カードの背景（白） */
-            --text-main: #1d1d1f;     /* メインの文字色（濃いグレー） */
-            --text-muted: #86868b;    /* 補足の文字色（薄いグレー） */
-            --accent: #0066cc;        /* アクセントカラー（青） */
-            --accent-orange: #ff6b00; /* アクセント（オレンジ） */
-            --border: #d2d2d7;        /* 境界線の色 */
+            /* 目が疲れにくいオフホワイトとダークグレーの組み合わせ */
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #595959;
+            --border: #d1d5db;
+            /* 色覚特性を問わず識別しやすいUDブルー */
+            --accent: #1d4ed8; 
+            /* 誰にでも読みやすいゴシック体ベースのフォントスタック */
+            --font-main: "Helvetica Neue", Arial, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
+            font-family: var(--font-main);
             background-color: var(--bg-color); 
             color: var(--text-main); 
-            line-height: 1.6; 
+            line-height: 1.8; 
             -webkit-font-smoothing: antialiased;
+            overflow: hidden; /* ローディング中はスクロール禁止 */
+        }
+        body.loaded {
+            overflow: auto; /* ローディング完了後にスクロール許可 */
         }
 
-        /* --- アニメーション --- */
-        @keyframes fadeInUp {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
+        /* --- Opening Animation (Loader) --- */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--bg-color);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.6s cubic-bezier(0.86, 0, 0.07, 1), opacity 0.6s ease;
         }
-        .animate-up { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .loader-content {
+            text-align: center;
+        }
+        .loader-text {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 0.15em;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: textReveal 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1s forwards;
+        }
+        .loader-line {
+            width: 0;
+            height: 3px;
+            background-color: var(--accent); /* ローダーの線をアクセントカラーに */
+            margin: 0 auto;
+            border-radius: 2px;
+            animation: lineGrow 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0.3s forwards;
+        }
 
-        /* --- 2. ヘッダーナビゲーション (ライトテーマ用に調整) --- */
+        @keyframes textReveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes lineGrow {
+            0% { width: 0; }
+            100% { width: 140px; }
+        }
+
+        body.loaded #loader {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* --- Header --- */
         header {
-            position: fixed; top: 0; width: 100%; height: 52px;
-            background: rgba(255, 255, 255, 0.7); 
-            backdrop-filter: saturate(180%) blur(20px); 
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); 
+            position: fixed; top: 0; width: 100%; height: 70px;
+            background: rgba(248, 249, 250, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid var(--border); 
             display: flex; align-items: center; justify-content: center;
         }
         .nav-inner {
-            width: 100%; max-width: 980px; padding: 0 20px; 
+            width: 100%; max-width: 1000px; padding: 0 40px; 
             display: flex; justify-content: space-between; align-items: center;
         }
-        .logo { font-size: 18px; font-weight: 600; text-decoration: none; color: var(--text-main); }
+        .logo { font-size: 18px; font-weight: bold; text-decoration: none; color: var(--text-main); letter-spacing: 0.1em; }
+        .nav-links { display: flex; gap: 40px; }
         .nav-links a {
-            font-size: 12px; text-decoration: none; color: var(--text-main); 
-            margin-left: 24px; opacity: 0.8; transition: opacity 0.3s;
+            font-size: 14px; text-decoration: none; color: var(--text-muted); 
+            letter-spacing: 0.05em; font-weight: bold; transition: color 0.3s;
+            position: relative; padding: 25px 0;
         }
-        .nav-links a:hover { opacity: 1; }
-
-        /* --- 3. レイアウトコンテナ --- */
-        .container { width: 100%; max-width: 900px; margin: 0 auto; padding: 100px 20px 80px; }
-
-        /* --- 4. ヒーローセクション --- */
-        .hero { text-align: center; padding: 60px 20px 60px; }
-        .hero-badge {
-            display: inline-block; font-size: 14px; font-weight: 600; 
-            color: var(--accent-orange); letter-spacing: 0.05em; margin-bottom: 16px;
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        .nav-links a.active::after {
+            content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: var(--accent);
+            border-radius: 3px 3px 0 0;
         }
-        .hero h1 { font-size: clamp(32px, 6vw, 56px); font-weight: 700; margin-bottom: 24px; line-height: 1.2; }
-        .hero p { font-size: clamp(16px, 2.5vw, 20px); color: var(--text-muted); max-width: 700px; margin: 0 auto 40px; }
+
+        /* --- Layout --- */
+        .container { max-width: 900px; margin: 0 auto; padding: 140px 40px 100px; min-height: calc(100vh - 80px); }
         
-        /* --- 5. 画像を表示するエリア --- */
-        .hero-image-wrapper {
-            width: 100%;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            margin-bottom: 60px;
-            background-color: #000;
-        }
-        .hero-image-wrapper img {
-            width: 100%;
-            height: auto;
-            display: block;
+        .page-section { display: none; animation: fadeIn 0.4s ease-out forwards; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
         }
 
-        /* --- 6. メインカード --- */
-        .card {
-            background-color: var(--card-bg); border-radius: 24px; padding: 40px;
-            margin-bottom: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.04);
-        }
-        .card-header { font-size: 26px; font-weight: 600; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .section-header { margin-bottom: 60px; text-align: center; }
+        .section-en { font-size: 14px; color: var(--text-muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; display: block; font-weight: bold; }
+        .section-jp { font-size: 32px; font-weight: bold; letter-spacing: 0.05em; color: var(--text-main); }
 
-        /* --- 7. 進捗状況バー (ライトテーマ用に調整) --- */
-        .progress-wrapper { margin-bottom: 30px; }
-        .progress-info { display: flex; justify-content: space-between; margin-bottom: 12px; }
-        .progress-label { font-size: 16px; font-weight: 600; }
-        .progress-percent { font-size: 36px; font-weight: 700; color: var(--accent); }
-        .progress-track { width: 100%; height: 12px; background-color: #e5e5ea; border-radius: 99px; overflow: hidden; }
-        .progress-fill { width: 30%; height: 100%; background-color: var(--accent); border-radius: 99px; }
+        /* --- Progress Section (#status) --- */
+        .progress-wrapper { margin-bottom: 60px; background: var(--card-bg); padding: 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+        .progress-info { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+        .progress-label { font-size: 18px; font-weight: bold; }
+        .progress-percent { font-size: 56px; font-weight: bold; line-height: 1; color: var(--accent); }
+        .progress-track { width: 100%; height: 8px; background-color: #e5e7eb; position: relative; border-radius: 4px; overflow: hidden; }
+        .progress-fill { position: absolute; left: 0; top: 0; height: 100%; background-color: var(--accent); width: 0; transition: width 1.5s cubic-bezier(0.215, 0.61, 0.355, 1); border-radius: 4px; }
+        body.loaded .progress-fill { width: 40%; } 
 
-        /* --- 8. タスク一覧 (ライトテーマ用に調整) --- */
-        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; list-style: none; }
-        .task-item {
-            padding: 16px 20px; background: var(--bg-color); border-radius: 16px; font-size: 14px;
-            display: flex; align-items: center; color: var(--text-muted); border: 1px solid transparent;
-        }
-        .task-item.done { background: #f0f8ff; border-color: #cce5ff; color: var(--accent); }
-        .task-item span { margin-right: 12px; font-size: 16px; }
+        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+        .task-item { padding: 25px; background: var(--card-bg); font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .task-item.done { background-color: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+        .task-item span.status { font-size: 12px; font-weight: bold; letter-spacing: 0.1em; border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; background: #f9fafb; }
+        .task-item.done span.status { background: #16a34a; color: #fff; border-color: #16a34a; }
 
-        /* --- 9. タイムライン（活動報告）(ライトテーマ用に調整) --- */
-        .timeline { position: relative; padding-left: 24px; }
-        .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 0; width: 2px; background: #e5e5ea; }
-        .timeline-item { position: relative; margin-bottom: 40px; }
+        /* --- Report Section (#report) --- */
+        .timeline { position: relative; padding-left: 30px; }
+        .timeline::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 0; width: 4px; background: #e5e7eb; border-radius: 2px; }
+        .timeline-item { position: relative; margin-bottom: 60px; background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .timeline-item:last-child { margin-bottom: 0; }
         .timeline-item::before {
-            content: ''; position: absolute; left: -29px; top: 6px; width: 12px; height: 12px;
-            border-radius: 50%; background: var(--card-bg); border: 2px solid var(--accent);
+            content: ''; position: absolute; left: -37px; top: 40px; width: 18px; height: 18px; background: var(--accent); border: 4px solid var(--bg-color); border-radius: 50%;
         }
-        .timeline-date { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; display: block; }
-        .timeline-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-        .timeline-content { font-size: 15px; color: #515154; }
-        .timeline-content ul { margin: 12px 0 0 24px; color: var(--text-muted); font-size: 14px; }
+        .timeline-date { font-size: 13px; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 10px; display: block; font-weight: bold; }
+        .timeline-title { font-size: 20px; margin-bottom: 20px; font-weight: bold; }
+        .timeline-content { font-size: 16px; color: var(--text-muted); line-height: 1.8; }
+        .timeline-content ul { margin: 15px 0 0 25px; padding: 0; list-style-type: disc; }
+        .timeline-content li { margin-bottom: 8px; }
 
-        /* --- 10. 今後の予定 (ライトテーマ用に調整) --- */
-        .ordered-list { list-style: none; counter-reset: custom-counter; }
-        .ordered-list li { position: relative; padding-left: 48px; margin-bottom: 20px; font-size: 16px; }
-        .ordered-list li::before {
-            content: counter(custom-counter); counter-increment: custom-counter;
-            position: absolute; left: 0; top: -2px; width: 28px; height: 28px;
-            background: var(--text-main); color: #fff; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold;
+        /* --- Future Section (#future) --- */
+        .future-list { list-style: none; counter-reset: future-counter; }
+        .future-list li {
+            position: relative; padding: 35px 30px 35px 90px; margin-bottom: 16px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            font-size: 18px; font-weight: bold; display: flex; align-items: center;
+        }
+        .future-list li::before {
+            content: "0" counter(future-counter); counter-increment: future-counter;
+            position: absolute; left: 30px; font-size: 24px; font-weight: bold; color: var(--accent);
         }
 
-        footer { text-align: center; color: var(--text-muted); font-size: 12px; padding: 40px 20px; }
+        /* --- Footer --- */
+        footer { text-align: center; color: var(--text-muted); font-size: 13px; padding: 40px 20px; border-top: 1px solid var(--border); letter-spacing: 0.05em; }
     </style>
 </head>
 <body>
 
+    <!-- ▼ オープニングローダー ▼ -->
+    <div id="loader">
+        <div class="loader-content">
+            <span class="loader-text">E3B ２班 課題研究</span>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
     <header>
         <div class="nav-inner">
-            <a href="#" class="logo">課題研究2班 | HUD Project</a>
+            <a href="#status" class="logo">HUD PROJECT.</a>
             <nav class="nav-links">
-                <a href="#status">進捗状況</a>
-                <a href="#report">活動報告</a>
-                <a href="#future">今後の予定</a>
+                <a href="#status" class="nav-link">STATUS</a>
+                <a href="#report" class="nav-link">REPORT</a>
+                <a href="#future" class="nav-link">FUTURE</a>
             </nav>
         </div>
     </header>
 
     <div class="container">
-        <section class="hero animate-up">
-            <span class="hero-badge">課題研究2班 発表内容</span>
-            <h1>HUD PROJECT<br>次世代のドライブ体験を創出する</h1>
-            <p>私たち2班は「HUD PROJECT」を通じ、車の運転中に視線を外すことなくナビゲーションや安全情報をフロントガラスに投影するシステムの開発と研究を行っています。</p>
-            
-            <div class="hero-image-wrapper">
-                <img src="image_0.png" alt="HUDドライブイメージ">
+        <!-- ▼ STATUS PAGE ▼ -->
+        <section id="status" class="page-section">
+            <div class="section-header">
+                <span class="section-en">Status</span>
+                <h1 class="section-jp">現在の進捗状況</h1>
             </div>
-        </section>
 
-        <section id="status" class="card animate-up" style="animation-delay: 0.2s;">
-            <h2 class="card-header">現在の進捗状況</h2>
             <div class="progress-wrapper">
                 <div class="progress-info">
                     <span class="progress-label">全体の開発プロセス</span>
-                    <span class="progress-percent">30%</span>
+                    <span class="progress-percent">40%</span>
                 </div>
                 <div class="progress-track">
                     <div class="progress-fill"></div>
                 </div>
             </div>
 
-            <ul class="task-grid">
-                <li class="task-item done"><span>●</span> 研究テーマ決定</li>
-                <li class="task-item done"><span>●</span> 設計図作成</li>
-                <li class="task-item done"><span>●</span> 部品選定</li>
-                <li class="task-item done"><span>●</span> M5StickS3動作確認</li>
-                <li class="task-item"><span>○</span> HUDグラス本体製作</li>
-                <li class="task-item"><span>○</span> 表示プログラム作成</li>
-            </ul>
-        </section>
-
-        <section id="report" class="card animate-up" style="animation-delay: 0.4s;">
-            <h2 class="card-header">活動報告</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <span class="timeline-date">PHASE 1</span>
-                    <h3 class="timeline-title">第1回活動：プロジェクトの立ち上げ</h3>
-                    <div class="timeline-content">2班のメンバーで課題研究のテーマについて話し合い、車の運転をより安全で快適にするアイデアとしてHUDを製作することに決定しました。</div>
+            <div class="task-grid">
+                <div class="task-item done">
+                    <span>研究テーマ決定</span>
+                    <span class="status">DONE</span>
                 </div>
-                <div class="timeline-item">
-                    <span class="timeline-date">PHASE 2</span>
-                    <h3 class="timeline-title">第2回活動：設計図作成とマテリアル選定</h3>
-                    <div class="timeline-content">
-                        HUDのプロトタイプ設計図を作成し、部品を検討しました。
-                        <ul>
-                            <li>M5StickS3（メインマイコン）</li>
-                            <li>カードルーペ拡大シート</li>
-                            <li>アクリル板（210×297×1mm）× 3枚</li>
-                            <li>HUD用光学フィルム</li>
-                        </ul>
-                    </div>
+                <div class="task-item done">
+                    <span>設計図作成</span>
+                    <span class="status">DONE</span>
                 </div>
-                <div class="timeline-item">
-                    <span class="timeline-date">PHASE 3</span>
-                    <h3 class="timeline-title">第3回活動：基盤ハードウェアの動作検証</h3>
-                    <div class="timeline-content">M5StickS3の初期動作確認を実施。画面全体を赤色に表示するプロトタイプコードをビルドし、マイコンが正常に動作する実証を得ました。</div>
+                <div class="task-item done">
+                    <span>部品選定</span>
+                    <span class="status">DONE</span>
                 </div>
-                <div class="timeline-item">
-                    <span class="timeline-date">PHASE 4</span>
-                    <h3 class="timeline-title">第4回活動：GitHubの修正とArduino動作確認</h3>
-                    <div class="timeline-content">管理用GitHubのファイル構成修正と、制御システムとの連携を想定したArduinoの通電テスト・動作確認を実施しました。</div>
+                <div class="task-item done">
+                    <span>M5StickS3動作確認</span>
+                    <span class="status">DONE</span>
+                </div>
+                <div class="task-item">
+                    <span>HUDグラス本体製作</span>
+                    <span class="status">WIP</span>
+                </div>
+                <div class="task-item">
+                    <span>表示プログラム作成</span>
+                    <span class="status">WIP</span>
                 </div>
             </div>
         </section>
 
-        <section id="future" class="card animate-up" style="animation-delay: 0.6s;">
-            <h2 class="card-header">今後のロードマップ</h2>
-            <ol class="ordered-list">
-                <li>HUD本体フレームの製作と組み上げ</li>
+        <!-- ▼ REPORT PAGE ▼ -->
+        <section id="report" class="page-section">
+            <div class="section-header">
+                <span class="section-en">Report</span>
+                <h1 class="section-jp">活動報告</h1>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 1</span>
+                    <h3 class="timeline-title">第1回活動：プロジェクトの立ち上げ</h3>
+                    <div class="timeline-content">
+                        グループで課題研究のテーマについて話し合い、どのような作品を製作するかを検討しました。ブレインストーミングの結果、最終的にHUDグラスを製作することに決定しました。
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 2</span>
+                    <h3 class="timeline-title">第2回活動：設計図作成とマテリアル選定</h3>
+                    <div class="timeline-content">
+                        HUDグラスを製作するためのプロトタイプ設計図を作成し、必要な部品や材料について詳細に検討を行いました。
+                        <ul>
+                            <li>M5StickS3（メインマイコン）</li>
+                            <li>カードルーペ拡大シート</li>
+                            <li>アクリル板（210×297×1mm）× 3枚</li>
+                            <li>ヘッドアップディスプレー（HUD）用光学フィルム</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 3</span>
+                    <h3 class="timeline-title">第3回活動：基盤ハードウェアの動作検証</h3>
+                    <div class="timeline-content">
+                        M5StickS3の初期動作確認を行いました。テスト用のプロトタイプコードをビルドし、画面全体を赤色に表示する実験を実施。正常に描画されることを確認し、システムの中核となるマイコンが問題なく動作する実証を得ました。
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 4</span>
+                    <h3 class="timeline-title">第4回活動：GitHubの修正とArduinoの動作確認</h3>
+                    <div class="timeline-content">
+                        プロジェクト管理用GitHubのリポジトリ内容の修正と整理を行いました。併せて、HUD制御に向けたArduino（アルディーノ）の基本的な動作確認を実施し、今後のプログラム開発環境を整えました。
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <span class="timeline-date">PHASE 5</span>
+                    <h3 class="timeline-title">第5回活動：Arduinoと外部コントロールの動作確認</h3>
+                    <div class="timeline-content">
+                        Arduino（アルディーノ）と外部コントロールを用いた動作確認を実施しました。外部デバイスからの入力に応じた制御テストを行い、システム全体の連携に向けた重要なステップをクリアしました。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ▼ FUTURE PAGE ▼ -->
+        <section id="future" class="page-section">
+            <div class="section-header">
+                <span class="section-en">Future</span>
+                <h1 class="section-jp">今後のロードマップ</h1>
+            </div>
+
+            <ul class="future-list">
+                <li>HUDグラス本体フレームの製作と組み上げ</li>
                 <li>アクリル板およびHUDフィルムの高精度なカッティングと加工</li>
                 <li>M5StickS3用 HUD情報表示ソフトウェアの開発</li>
                 <li>実機における動作テストとフィードバックに基づく改良</li>
-                <li>2班 最終プレゼンテーション用ドキュメントの作成</li>
-            </ol>
+                <li>最終プレゼンテーション用ドキュメントの作成</li>
+            </ul>
         </section>
     </div>
 
     <footer>
-        <p>&copy; 2026 課題研究2班 HUD PROJECT.</p>
+        <p>&copy; 2024 HUD PROJECT. ALL RIGHTS RESERVED.</p>
     </footer>
 
+    <script>
+        // オープニングアニメーションの制御
+        window.addEventListener('load', () => {
+            // 1000ミリ秒（1秒）経過後にローディング画面を開く（スライドさせて表示）
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 1000);
+            navigate(); 
+        });
+
+        // SPA風のページ遷移ロジック
+        function navigate() {
+            let hash = window.location.hash || '#status';
+            
+            document.querySelectorAll('.page-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const targetSection = document.querySelector(hash);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            const targetLink = document.querySelector(`.nav-link[href="${hash}"]`);
+            if (targetLink) {
+                targetLink.classList.add('active');
+            }
+            
+            window.scrollTo(0, 0);
+        }
+
+        window.addEventListener('hashchange', navigate);
+    </script>
 </body>
 </html>
