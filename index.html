@@ -3,32 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUD PROJECT</title>
+    <title>HUD PROJECT | E3B ２班</title>
     <style>
-        /* --- Base & Reset (Universal Design) --- */
+        /* --- Base & Reset (Universal Design & Dark HUD Mode) --- */
         :root {
-            /* 目が疲れにくいオフホワイトとダークグレーの組み合わせ */
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --text-main: #333333;
             --text-muted: #595959;
             --border: #d1d5db;
-            /* 色覚特性を問わず識別しやすいUDブルー */
             --accent: #1d4ed8; 
-            /* 誰にでも読みやすいゴシック体ベースのフォントスタック */
+            --accent-glow: rgba(29, 78, 216, 0.15);
+            --header-bg: rgba(248, 249, 250, 0.95);
             --font-main: "Helvetica Neue", Arial, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+            --font-mono: "Courier New", Courier, monospace;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* 🌙 サイバーHUDダークモード設定 */
+        [data-theme="dark"] {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #1f2937;
+            --accent: #38bdf8; /* HUDサイバーブルー */
+            --accent-glow: rgba(56, 189, 248, 0.2);
+            --header-bg: rgba(11, 15, 25, 0.95);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
         body {
             font-family: var(--font-main);
             background-color: var(--bg-color); 
             color: var(--text-main); 
             line-height: 1.8; 
             -webkit-font-smoothing: antialiased;
-            overflow: hidden; /* ローディング中はスクロール禁止 */
+            overflow: hidden;
         }
         body.loaded {
-            overflow: auto; /* ローディング完了後にスクロール許可 */
+            overflow: auto;
         }
 
         /* --- Opening Animation (Loader) --- */
@@ -45,9 +58,7 @@
             align-items: center;
             transition: transform 0.6s cubic-bezier(0.86, 0, 0.07, 1), opacity 0.6s ease;
         }
-        .loader-content {
-            text-align: center;
-        }
+        .loader-content { text-align: center; }
         .loader-text {
             display: block;
             font-size: 24px;
@@ -60,21 +71,16 @@
             animation: textReveal 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0.1s forwards;
         }
         .loader-line {
-            width: 0;
-            height: 3px;
-            background-color: var(--accent); /* ローダーの線をアクセントカラーに */
+            width: 0; height: 3px;
+            background-color: var(--accent);
             margin: 0 auto;
             border-radius: 2px;
             animation: lineGrow 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0.3s forwards;
+            box-shadow: 0 0 8px var(--accent);
         }
 
-        @keyframes textReveal {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes lineGrow {
-            0% { width: 0; }
-            100% { width: 140px; }
-        }
+        @keyframes textReveal { to { opacity: 1; transform: translateY(0); } }
+        @keyframes lineGrow { 0% { width: 0; } 100% { width: 140px; } }
 
         body.loaded #loader {
             transform: translateY(-100%);
@@ -85,17 +91,18 @@
         /* --- Header --- */
         header {
             position: fixed; top: 0; width: 100%; height: 70px;
-            background: rgba(248, 249, 250, 0.95);
+            background: var(--header-bg);
             backdrop-filter: blur(10px);
             z-index: 1000; border-bottom: 1px solid var(--border); 
             display: flex; align-items: center; justify-content: center;
         }
         .nav-inner {
-            width: 100%; max-width: 1000px; padding: 0 40px; 
+            width: 100%; max-width: 1000px; padding: 0 30px; 
             display: flex; justify-content: space-between; align-items: center;
         }
         .logo { font-size: 18px; font-weight: bold; text-decoration: none; color: var(--text-main); letter-spacing: 0.1em; }
-        .nav-links { display: flex; gap: 40px; }
+        .nav-right { display: flex; align-items: center; gap: 30px; }
+        .nav-links { display: flex; gap: 25px; }
         .nav-links a {
             font-size: 14px; text-decoration: none; color: var(--text-muted); 
             letter-spacing: 0.05em; font-weight: bold; transition: color 0.3s;
@@ -104,83 +111,110 @@
         .nav-links a:hover, .nav-links a.active { color: var(--accent); }
         .nav-links a.active::after {
             content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: var(--accent);
-            border-radius: 3px 3px 0 0;
+            border-radius: 3px 3px 0 0; box-shadow: 0 0 6px var(--accent);
         }
+
+        /* ダークモード切り替えボタン */
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
         /* --- Layout --- */
-        .container { max-width: 900px; margin: 0 auto; padding: 140px 40px 100px; min-height: calc(100vh - 80px); }
-        
+        .container { max-width: 900px; margin: 0 auto; padding: 120px 30px 80px; min-height: calc(100vh - 80px); }
         .page-section { display: none; animation: fadeIn 0.4s ease-out forwards; }
         .page-section.active { display: block; }
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .section-header { margin-bottom: 60px; text-align: center; }
-        .section-en { font-size: 14px; color: var(--text-muted); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; display: block; font-weight: bold; }
-        .section-jp { font-size: 32px; font-weight: bold; letter-spacing: 0.05em; color: var(--text-main); }
+        .section-header { margin-bottom: 50px; text-align: center; }
+        .section-en { font-size: 14px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: bold; }
+        .section-jp { font-size: 30px; font-weight: bold; letter-spacing: 0.05em; color: var(--text-main); }
+
+        /* --- Tech Stack & Specs --- */
+        .tech-wrapper {
+            background: var(--card-bg); border-radius: 12px; padding: 25px; margin-bottom: 40px;
+            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .tech-title { font-size: 16px; font-weight: bold; margin-bottom: 15px; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tech-tag {
+            background: var(--bg-color); border: 1px solid var(--border); color: var(--text-muted);
+            padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: bold; font-family: var(--font-mono);
+        }
+        .tech-tag.highlight { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
 
         /* --- Progress Section (#status) --- */
-        .progress-wrapper { margin-bottom: 60px; background: var(--card-bg); padding: 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
-        .progress-info { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+        .progress-wrapper { margin-bottom: 40px; background: var(--card-bg); padding: 35px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+        .progress-info { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
         .progress-label { font-size: 18px; font-weight: bold; }
-        .progress-percent { font-size: 56px; font-weight: bold; line-height: 1; color: var(--accent); }
-        .progress-track { width: 100%; height: 8px; background-color: #e5e7eb; position: relative; border-radius: 4px; overflow: hidden; }
-        .progress-fill { position: absolute; left: 0; top: 0; height: 100%; background-color: var(--accent); width: 0; transition: width 1.5s cubic-bezier(0.215, 0.61, 0.355, 1); border-radius: 4px; }
+        .progress-percent { font-size: 52px; font-weight: bold; line-height: 1; color: var(--accent); font-family: var(--font-mono); }
+        .progress-track { width: 100%; height: 8px; background-color: var(--border); position: relative; border-radius: 4px; overflow: hidden; }
+        .progress-fill { position: absolute; left: 0; top: 0; height: 100%; background-color: var(--accent); width: 0; transition: width 1.5s cubic-bezier(0.215, 0.61, 0.355, 1); border-radius: 4px; box-shadow: 0 0 10px var(--accent); }
+        body.loaded .progress-fill { width: 40%; } 
 
-        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
-        .task-item { padding: 25px; background: var(--card-bg); font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .task-item.done { background-color: #f0fdf4; border-color: #bbf7d0; color: #166534; }
-        .task-item span.status { font-size: 12px; font-weight: bold; letter-spacing: 0.1em; border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; background: #f9fafb; }
-        .task-item.done span.status { background: #16a34a; color: #fff; border-color: #16a34a; }
+        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 40px; }
+        .task-item { padding: 20px 25px; background: var(--card-bg); font-size: 15px; font-weight: bold; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; border: 1px solid var(--border); }
+        .task-item.done { border-color: #22c55e; }
+        .task-item span.status { font-size: 11px; font-weight: bold; letter-spacing: 0.1em; border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; background: var(--bg-color); }
+        .task-item.done span.status { background: #22c55e; color: #fff; border-color: #22c55e; }
+
+        /* --- Members Section --- */
+        .member-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+        .member-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px; text-align: left;
+        }
+        .member-card.leader-card {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--card-bg) 0%, var(--accent-glow) 100%);
+        }
+        .member-role { font-size: 12px; color: var(--accent); font-weight: bold; letter-spacing: 0.1em; margin-bottom: 5px; text-transform: uppercase; }
+        .member-name { font-size: 18px; font-weight: bold; color: var(--text-main); margin-bottom: 8px; }
+        .member-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+        /* --- Gallery Section --- */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 15px; }
+        .gallery-item {
+            background: var(--bg-color); border: 2px dashed var(--border); border-radius: 8px; height: 160px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted);
+            font-size: 13px; text-align: center; padding: 15px;
+        }
 
         /* --- Report Section (#report) --- */
         .timeline { position: relative; padding-left: 30px; }
-        .timeline::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 0; width: 4px; background: #e5e7eb; border-radius: 2px; }
-        .timeline-item { position: relative; margin-bottom: 60px; background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .timeline::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 0; width: 3px; background: var(--border); border-radius: 2px; }
+        .timeline-item { position: relative; margin-bottom: 50px; background: var(--card-bg); padding: 25px 30px; border-radius: 12px; border: 1px solid var(--border); }
         .timeline-item:last-child { margin-bottom: 0; }
         .timeline-item::before {
-            content: ''; position: absolute; left: -37px; top: 40px; width: 18px; height: 18px; background: var(--accent); border: 4px solid var(--bg-color); border-radius: 50%;
+            content: ''; position: absolute; left: -36px; top: 32px; width: 14px; height: 14px; background: var(--accent); border: 3px solid var(--bg-color); border-radius: 50%; box-shadow: 0 0 8px var(--accent);
         }
-        .timeline-date { font-size: 13px; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 10px; display: block; font-weight: bold; }
-        .timeline-title { font-size: 20px; margin-bottom: 20px; font-weight: bold; }
-        .timeline-content { font-size: 16px; color: var(--text-muted); line-height: 1.8; }
-        .timeline-content ul { margin: 15px 0 0 25px; padding: 0; list-style-type: disc; }
-        .timeline-content li { margin-bottom: 8px; }
+        .timeline-date { font-size: 12px; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 8px; display: block; font-weight: bold; font-family: var(--font-mono); }
+        .timeline-title { font-size: 18px; margin-bottom: 15px; font-weight: bold; }
+        .timeline-content { font-size: 15px; color: var(--text-muted); line-height: 1.8; }
+        .timeline-content ul { margin: 12px 0 0 20px; padding: 0; list-style-type: disc; }
 
         /* --- Future Section (#future) --- */
         .future-list { list-style: none; counter-reset: future-counter; }
         .future-list li {
-            position: relative; padding: 35px 30px 35px 90px; margin-bottom: 16px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            font-size: 18px; font-weight: bold; display: flex; align-items: center;
+            position: relative; padding: 25px 25px 25px 80px; margin-bottom: 16px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border);
+            font-size: 16px; font-weight: bold; display: flex; align-items: center;
         }
         .future-list li::before {
             content: "0" counter(future-counter); counter-increment: future-counter;
-            position: absolute; left: 30px; font-size: 24px; font-weight: bold; color: var(--accent);
+            position: absolute; left: 25px; font-size: 22px; font-weight: bold; color: var(--accent); font-family: var(--font-mono);
         }
 
         /* --- Footer --- */
         footer { text-align: center; color: var(--text-muted); font-size: 13px; padding: 40px 20px; border-top: 1px solid var(--border); letter-spacing: 0.05em; }
-
-        /* --- 【二番】レスポンシブ対応 (スマートフォン向け表示最適化) --- */
-        @media (max-width: 600px) {
-            .nav-inner { padding: 0 20px; }
-            .nav-links { gap: 15px; }
-            .nav-links a { font-size: 13px; padding: 25px 0; }
-            .container { padding: 110px 20px 60px; }
-            .section-header { margin-bottom: 35px; }
-            .section-jp { font-size: 24px; }
-            .progress-wrapper { padding: 25px 20px; margin-bottom: 30px; }
-            .progress-percent { font-size: 40px; }
-            .task-grid { grid-template-columns: 1fr; }
-            .task-item { padding: 18px; font-size: 15px; }
-            .timeline { padding-left: 20px; }
-            .timeline-item { padding: 20px; margin-bottom: 35px; }
-            .timeline-item::before { left: -27px; width: 14px; height: 14px; }
-            .future-list li { padding: 20px 20px 20px 60px; font-size: 15px; }
-            .future-list li::before { left: 18px; font-size: 18px; }
-        }
     </style>
 </head>
 <body>
@@ -193,14 +227,20 @@
         </div>
     </div>
 
+    <!-- ▼ ヘッダー & テーマ切り替えボタン ▼ -->
     <header>
         <div class="nav-inner">
             <a href="#status" class="logo">HUD PROJECT.</a>
-            <nav class="nav-links">
-                <a href="#status" class="nav-link">STATUS</a>
-                <a href="#report" class="nav-link">REPORT</a>
-                <a href="#future" class="nav-link">FUTURE</a>
-            </nav>
+            <div class="nav-right">
+                <nav class="nav-links">
+                    <a href="#status" class="nav-link">STATUS</a>
+                    <a href="#report" class="nav-link">REPORT</a>
+                    <a href="#future" class="nav-link">FUTURE</a>
+                </nav>
+                <button class="theme-toggle" id="themeToggle">
+                    <span id="themeIcon">🌙</span> <span id="themeText">HUD</span>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -208,21 +248,22 @@
         <!-- ▼ STATUS PAGE ▼ -->
         <section id="status" class="page-section">
             <div class="section-header">
-                <span class="section-en">Status</span>
-                <h1 class="section-jp">現在の進捗状況</h1>
+                <span class="section-en">Status & Overview</span>
+                <h1 class="section-jp">開発状況とプロジェクト概要</h1>
             </div>
 
+            <!-- 進捗バー -->
             <div class="progress-wrapper">
                 <div class="progress-info">
                     <span class="progress-label">全体の開発プロセス</span>
-                    <!-- 一番の機能により、初期表示0%から自動計算して動的にカウントアップされます -->
-                    <span class="progress-percent">0%</span>
+                    <span class="progress-percent">40%</span>
                 </div>
                 <div class="progress-track">
                     <div class="progress-fill"></div>
                 </div>
             </div>
 
+            <!-- タスク一覧 -->
             <div class="task-grid">
                 <div class="task-item done">
                     <span>研究テーマ決定</span>
@@ -249,13 +290,80 @@
                     <span class="status">WIP</span>
                 </div>
             </div>
+
+            <!-- 技術スタック / 使用マテリアル -->
+            <div class="tech-wrapper">
+                <div class="tech-title">⚡ 使用ハードウェア & 技術スタック</div>
+                <div class="tech-tags">
+                    <span class="tech-tag highlight">M5StickS3</span>
+                    <span class="tech-tag highlight">Arduino IDE</span>
+                    <span class="tech-tag highlight">C / C++</span>
+                    <span class="tech-tag">光学HUDフィルム</span>
+                    <span class="tech-tag">カードルーペレンズ</span>
+                    <span class="tech-tag">アクリル加工</span>
+                    <span class="tech-tag">HTML5 / CSS3</span>
+                    <span class="tech-tag">GitHub Pages</span>
+                </div>
+            </div>
+
+            <!-- メンバー紹介 -->
+            <div class="section-header" style="margin-top: 60px; margin-bottom: 30px;">
+                <span class="section-en">Team Members</span>
+                <h2 style="font-size: 22px; font-weight: bold;">E3B ２班 メンバー構成</h2>
+            </div>
+            <div class="member-grid">
+                <!-- リーダー（ハイライト表示） -->
+                <div class="member-card leader-card">
+                    <div class="member-role">👑 PROJECT LEADER</div>
+                    <div class="member-name">小川 遼人</div>
+                    <div class="member-desc">
+                        全体スケジュール管理 / 企画立案 / ハード・ソフト統括 / チーム統括
+                    </div>
+                </div>
+
+                <!-- プログラミング担当 -->
+                <div class="member-card">
+                    <div class="member-role">💻 PROGRAMMING LEAD</div>
+                    <div class="member-name">長谷部 陸大</div>
+                    <div class="member-desc">
+                        M5StickS3表示制御プログラム開発 / Arduinoスケッチ作成・検証
+                    </div>
+                </div>
+
+                <!-- GitHub担当 1 -->
+                <div class="member-card">
+                    <div class="member-role">🚀 GITHUB & DEVOPS</div>
+                    <div class="member-name">大橋 一楓</div>
+                    <div class="member-desc">
+                        リポジトリ構築・管理 / Webサイト制作・バージョン管理
+                    </div>
+                </div>
+
+                <!-- GitHub担当 2 -->
+                <div class="member-card">
+                    <div class="member-role">🚀 GITHUB & DEVOPS</div>
+                    <div class="member-name">永木 一颯</div>
+                    <div class="member-desc">
+                        リポジトリ管理 / Webコンテンツ作成・コード保守
+                    </div>
+                </div>
+
+                <!-- ドキュメント担当 -->
+                <div class="member-card">
+                    <div class="member-role">📄 DOCUMENTATION</div>
+                    <div class="member-name">瀧浦 漣</div>
+                    <div class="member-desc">
+                        活動記録作成 / 課題研究報告書・発表資料ドキュメント作成
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- ▼ REPORT PAGE ▼ -->
         <section id="report" class="page-section">
             <div class="section-header">
-                <span class="section-en">Report</span>
-                <h1 class="section-jp">活動報告</h1>
+                <span class="section-en">Report & Gallery</span>
+                <h1 class="section-jp">活動報告と開発ログ</h1>
             </div>
 
             <div class="timeline">
@@ -286,6 +394,15 @@
                     <h3 class="timeline-title">第3回活動：基盤ハードウェアの動作検証</h3>
                     <div class="timeline-content">
                         M5StickS3の初期動作確認を行いました。テスト用のプロトタイプコードをビルドし、画面全体を赤色に表示する実験を実施。正常に描画されることを確認し、システムの中核となるマイコンが問題なく動作する実証を得ました。
+                        
+                        <div class="gallery-grid">
+                            <div class="gallery-item">
+                                📷 M5StickS3 赤色画面テスト写真<br><small>(画像をここに追加予定)</small>
+                            </div>
+                            <div class="gallery-item">
+                                📷 アクリル板 & 光学フィルム<br><small>(画像をここに追加予定)</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -310,7 +427,7 @@
         <!-- ▼ FUTURE PAGE ▼ -->
         <section id="future" class="page-section">
             <div class="section-header">
-                <span class="section-en">Future</span>
+                <span class="section-en">Future Roadmap</span>
                 <h1 class="section-jp">今後のロードマップ</h1>
             </div>
 
@@ -325,54 +442,45 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 HUD PROJECT. ALL RIGHTS RESERVED.</p>
+        <p>&copy; 2024 HUD PROJECT - E3B 2nd Group. ALL RIGHTS RESERVED.</p>
     </footer>
 
     <script>
-        // 【一番】進捗率の自動計算機能
-        function updateProgress() {
-            const tasks = document.querySelectorAll('.task-item');
-            const doneTasks = document.querySelectorAll('.task-item.done');
-            if (tasks.length === 0) return;
-
-            // DONEのタスク割合を計算 (%)
-            const percentage = Math.round((doneTasks.length / tasks.length) * 100);
-
-            // 画面の数値テキストとメーターバー幅へ反映
-            document.querySelector('.progress-percent').textContent = `${percentage}%`;
-            document.querySelector('.progress-fill').style.width = `${percentage}%`;
-        }
-
-        // オープニングアニメーションの制御
+        // オープニングアニメーション制御
         window.addEventListener('load', () => {
-            // 1000ミリ秒（1秒）経過後にローディング画面を開く
             setTimeout(() => {
                 document.body.classList.add('loaded');
-                updateProgress(); // ローディング終了時に進捗バーを伸ばす
             }, 1000);
             navigate(); 
+        });
+
+        // 🌙/☀️ ダークモード切り替えロジック
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+            }
         });
 
         // SPA風のページ遷移ロジック
         function navigate() {
             let hash = window.location.hash || '#status';
             
-            document.querySelectorAll('.page-section').forEach(sec => {
-                sec.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
 
             const targetSection = document.querySelector(hash);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
+            if (targetSection) targetSection.classList.add('active');
 
             const targetLink = document.querySelector(`.nav-link[href="${hash}"]`);
-            if (targetLink) {
-                targetLink.classList.add('active');
-            }
+            if (targetLink) targetLink.classList.add('active');
             
             window.scrollTo(0, 0);
         }
