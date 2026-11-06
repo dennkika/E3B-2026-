@@ -119,7 +119,7 @@
             background: var(--card-bg);
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
             cursor: pointer;
             font-size: 14px;
@@ -236,8 +236,9 @@
                     <a href="#report" class="nav-link">REPORT</a>
                     <a href="#future" class="nav-link">FUTURE</a>
                 </nav>
+                <!-- 初期表示はLIGHTモード状態（クリックでDARKモードにする案内を表示） -->
                 <button class="theme-toggle" id="themeToggle">
-                    <span id="themeIcon">🌙</span> <span id="themeText">DARK</span>
+                    <span id="themeIcon">🌙</span> <span id="themeText">DARK MODE</span>
                 </button>
             </div>
         </div>
@@ -446,14 +447,14 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 3秒（3000ms）きっちりでローディング画面を解除
+            // 3秒（3000ms）でローディング画面を上げる
             setTimeout(() => {
                 document.body.classList.add('loaded');
                 updateProgress();
             }, 3000);
 
             navigate();
-            initTheme(); // テーマ初期状態の設定
+            initTheme(); // テーマの初期化（デフォルト LIGHT）
         });
 
         // 📊 タスクのDONE数から進捗率(%)を自動計算する関数
@@ -471,33 +472,40 @@
             }
         }
 
-        // 🌙/☀️ ダークモード切り替えロジック
+        // ☀️/🌙 テーマ切り替えロジック
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const themeText = document.getElementById('themeText');
 
-        function updateThemeUI(isDark) {
+        // テーマとボタンUIを更新する関数
+        function applyTheme(isDark) {
             if (isDark) {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 if (themeIcon) themeIcon.textContent = '☀️';
-                if (themeText) themeText.textContent = 'LIGHT';
+                if (themeText) themeText.textContent = 'LIGHT MODE';
+                localStorage.setItem('hud_theme', 'dark');
             } else {
                 document.documentElement.removeAttribute('data-theme');
                 if (themeIcon) themeIcon.textContent = '🌙';
-                if (themeText) themeText.textContent = 'DARK';
+                if (themeText) themeText.textContent = 'DARK MODE';
+                localStorage.setItem('hud_theme', 'light');
             }
         }
 
+        // ページ読み込み時の初期化設定（保存された状態がなければデフォルトLIGHT）
         function initTheme() {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            updateThemeUI(isDark);
+            const savedTheme = localStorage.getItem('hud_theme');
+            // 明示的に'dark'が保存されていない場合はすべてLIGHTモード（初期値）で開く
+            const isDark = (savedTheme === 'dark');
+            applyTheme(isDark);
         }
 
+        // ボタンクリック時の切り替えイベント
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
                 const currentTheme = document.documentElement.getAttribute('data-theme');
-                const isCurrentlyDark = currentTheme === 'dark';
-                updateThemeUI(!isCurrentlyDark);
+                const isCurrentlyDark = (currentTheme === 'dark');
+                applyTheme(!isCurrentlyDark);
             });
         }
 
