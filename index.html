@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HUD PROJECT | E3B ２班</title>
     <style>
-        /* --- Base & Reset (Universal Design & Dark HUD Mode) --- */
+        /* --- Base & Reset --- */
         :root {
-            --bg-color: #ffffff;       /* 完全な白 */
-            --card-bg: #f8fafc;     /* カード背景 */
+            --bg-color: #ffffff;       /* 完全な白背景 */
+            --card-bg: #f8fafc;     /* 明るいカード背景 */
             --text-main: #0f172a;     /* はっきり見える濃い文字色 */
             --text-muted: #475569;   /* サブ文字色 */
             --border: #e2e8f0;       /* 枠線 */
@@ -38,13 +38,10 @@
             color: var(--text-main); 
             line-height: 1.8; 
             -webkit-font-smoothing: antialiased;
-            overflow: hidden;
-        }
-        body.loaded {
             overflow: auto;
         }
 
-        /* --- Opening Animation (Loader) --- */
+        /* --- Loader --- */
         #loader {
             position: fixed;
             top: 0;
@@ -114,7 +111,7 @@
             border-radius: 3px 3px 0 0; box-shadow: 0 0 6px var(--accent);
         }
 
-        /* ダークモード切り替えボタン */
+        /* テーマ切り替えボタン */
         .theme-toggle {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -132,15 +129,15 @@
 
         /* --- Layout --- */
         .container { max-width: 900px; margin: 0 auto; padding: 120px 30px 80px; min-height: calc(100vh - 80px); }
-        .page-section { display: none; animation: fadeIn 0.4s ease-out forwards; }
-        .page-section.active { display: block; }
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .section-header { margin-bottom: 50px; text-align: center; }
         .section-en { font-size: 14px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: bold; }
         .section-jp { font-size: 30px; font-weight: bold; letter-spacing: 0.05em; color: var(--text-main); }
 
-        /* --- Tech Stack & Specs --- */
+        /* --- Tech Stack --- */
         .tech-wrapper {
             background: var(--card-bg); border-radius: 12px; padding: 25px; margin-bottom: 40px;
             border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
@@ -153,8 +150,12 @@
         }
         .tech-tag.highlight { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
 
-        /* --- Progress Section (#status) --- */
+        /* --- Progress Section --- */
         .progress-wrapper { margin-bottom: 40px; background: var(--card-bg); padding: 35px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
         .progress-info { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
         .progress-label { font-size: 18px; font-weight: bold; }
-        .progress-percent { font-size: 52px; font-weight: bold; line-height: 1; color
+        .progress-percent { font-size: 52px; font-weight: bold; line-height: 1; color: var(--accent); font-family: var(--font-mono); }
+        .progress-track { width: 100%; height: 8px; background-color: var(--border); position: relative; border-radius: 4px; overflow: hidden; }
+        .progress-fill { position: absolute; left: 0; top: 0; height: 100%; background-color: var(--accent); width: 0%; transition: width 1.5s cubic-bezier(0.215, 0.61, 0.355, 1); border-radius: 4px; box-shadow: 0 0 10px var(--accent); }
+
+        .task-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(2
