@@ -181,6 +181,18 @@
         }
         .member-role { font-size: 12px; color: var(--accent); font-weight: bold; letter-spacing: 0.1em; margin-bottom: 5px; text-transform: uppercase; }
         .member-name { font-size: 18px; font-weight: bold; color: var(--text-main); margin-bottom: 8px; }
+        
+        /* メンバーアイコン画像用スタイル */
+        .member-photo {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+            margin: 6px 0 10px 0;
+            display: block;
+        }
+
         .member-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
         /* --- Gallery Section --- */
@@ -320,14 +332,18 @@
                 <h2 style="font-size: 22px; font-weight: bold;">E3B ２班 メンバー構成</h2>
             </div>
             <div class="member-grid">
+                <!-- リーダー -->
                 <div class="member-card">
                     <div class="member-role">👑 PROJECT LEADER</div>
                     <div class="member-name">小川 遼人</div>
+                    <!-- ▼ 小川遼人さんの名前の下に配置した顔写真 ▼ -->
+                    <img src="ogawa.jpg" alt="小川 遼人" class="member-photo">
                     <div class="member-desc">
                         全体スケジュール管理 / 企画立案 / ハード・ソフト統括 / チーム統括
                     </div>
                 </div>
 
+                <!-- プログラミング担当 -->
                 <div class="member-card">
                     <div class="member-role">💻 PROGRAMMING LEAD</div>
                     <div class="member-name">長谷部 陸大</div>
@@ -336,6 +352,7 @@
                     </div>
                 </div>
 
+                <!-- GitHub担当 1 -->
                 <div class="member-card">
                     <div class="member-role">🚀 GITHUB & DEVOPS</div>
                     <div class="member-name">大橋 一楓</div>
@@ -344,6 +361,7 @@
                     </div>
                 </div>
 
+                <!-- GitHub担当 2 -->
                 <div class="member-card">
                     <div class="member-role">🚀 GITHUB & DEVOPS</div>
                     <div class="member-name">山崎ここな＆永木一颯</div>
@@ -352,6 +370,7 @@
                     </div>
                 </div>
 
+                <!-- ドキュメント担当 -->
                 <div class="member-card">
                     <div class="member-role">📄 DOCUMENTATION</div>
                     <div class="member-name">瀧浦 蓮</div>
@@ -398,10 +417,8 @@
                     <div class="timeline-content">
                         M5StickS3の初期動作確認を行いました。テスト用のプロトタイプコードをビルドし、画面全体を赤色に表示する実験を実施。正常に描画されることを確認し、システムの中核となるマイコンが問題なく動作する実証を得ました。
                         
-                        <!-- ▼ 画像枠（ギャラリー） ▼ -->
                         <div class="gallery-grid">
                             <div class="gallery-item">
-                                <!-- 写真がある場合は src="画像名.jpg" を指定 -->
                                 <img src="image1.jpg" alt="M5StickS3 赤色画面テスト写真" onerror="this.outerHTML='📷 M5StickS3 赤色画面テスト写真<br><small>(画像ファイル未指定)</small>'">
                             </div>
                             <div class="gallery-item">
