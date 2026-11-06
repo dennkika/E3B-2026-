@@ -192,7 +192,6 @@
             margin: 8px 0 12px 0;
             display: block;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            background-color: var(--border);
         }
 
         .member-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
@@ -332,8 +331,8 @@
                 <div class="member-card">
                     <div class="member-role">👑 PROJECT LEADER</div>
                     <div class="member-name">小川 遼人</div>
-                    <!-- ▼ アップロード画像を埋め込んだSVG（ファイル無しで100%表示可能） ▼ -->
-                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100%' height='100%' fill='%231d4ed8'/><circle cx='50' cy='40' r='22' fill='%23ffffff'/><path d='M 15 90 C 15 65, 85 65, 85 90 Z' fill='%23ffffff'/></svg>" alt="小川 遼人" class="member-photo" id="ogawaImg">
+                    <!-- ▼ アップロードいただいた顔写真をデータ変換して直接埋め込み ▼ -->
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="小川 遼人" class="member-photo" id="ogawaImg">
                     <div class="member-desc">
                         全体スケジュール管理 / 企画立案 / ハード・ソフト統括 / チーム統括
                     </div>
@@ -464,14 +463,16 @@
     </footer>
 
     <script>
-        // 画像の安全な読み込み処理（エラーで画像が消えるのを完全に防止）
-        document.addEventListener("DOMContentLoaded", () => {
+        // JSで画像の読み込みを完全コントロール
+        window.addEventListener("load", () => {
             const ogawaImg = document.getElementById('ogawaImg');
             if (ogawaImg) {
-                const testImg = new Image();
-                testImg.onload = () => { ogawaImg.src = testImg.src; };
-                // フォルダ内に 'ogawa.jpg' または 'image.png' があれば自動でそれを読み込み
-                testImg.src = 'ogawa.jpg';
+                // 画像表示用スクリプト
+                const imgLoader = new Image();
+                imgLoader.onload = () => {
+                    ogawaImg.src = imgLoader.src;
+                };
+                imgLoader.src = "ogawa.jpg";
             }
         });
 
