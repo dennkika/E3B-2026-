@@ -237,7 +237,7 @@
                     <a href="#future" class="nav-link">FUTURE</a>
                 </nav>
                 <button class="theme-toggle" id="themeToggle">
-                    <span id="themeIcon">🌙</span> <span id="themeText">HUD</span>
+                    <span id="themeIcon">🌙</span> <span id="themeText">DARK</span>
                 </button>
             </div>
         </div>
@@ -445,15 +445,15 @@
     </footer>
 
     <script>
-        // ページの表示準備が完了したらすぐに正確なタイマー(3秒)を走らせる
         document.addEventListener('DOMContentLoaded', () => {
-            // 3秒（3000ms）きっちりでローディング画面を上げる
+            // 3秒（3000ms）きっちりでローディング画面を解除
             setTimeout(() => {
                 document.body.classList.add('loaded');
                 updateProgress();
             }, 3000);
 
             navigate();
+            initTheme(); // テーマ初期状態の設定
         });
 
         // 📊 タスクのDONE数から進捗率(%)を自動計算する関数
@@ -474,17 +474,32 @@
         // 🌙/☀️ ダークモード切り替えロジック
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
-        
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            if (currentTheme === 'dark') {
-                document.documentElement.removeAttribute('data-theme');
-                themeIcon.textContent = '🌙';
-            } else {
+        const themeText = document.getElementById('themeText');
+
+        function updateThemeUI(isDark) {
+            if (isDark) {
                 document.documentElement.setAttribute('data-theme', 'dark');
-                themeIcon.textContent = '☀️';
+                if (themeIcon) themeIcon.textContent = '☀️';
+                if (themeText) themeText.textContent = 'LIGHT';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                if (themeIcon) themeIcon.textContent = '🌙';
+                if (themeText) themeText.textContent = 'DARK';
             }
-        });
+        }
+
+        function initTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            updateThemeUI(isDark);
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const isCurrentlyDark = currentTheme === 'dark';
+                updateThemeUI(!isCurrentlyDark);
+            });
+        }
 
         // SPA風のページ遷移ロジック
         function navigate() {
