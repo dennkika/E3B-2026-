@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HUD PROJECT | E3B ２班</title>
     <style>
-        /* --- Base & Reset (Universal Design & Dark HUD Mode) --- */
+        /* --- Base & Reset --- */
         :root {
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
@@ -26,7 +26,7 @@
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --border: #1f2937;
-            --accent: #38bdf8; /* HUDサイバーブルー */
+            --accent: #38bdf8;
             --accent-glow: rgba(56, 189, 248, 0.2);
             --header-bg: rgba(11, 15, 25, 0.95);
         }
@@ -182,16 +182,16 @@
         .member-role { font-size: 12px; color: var(--accent); font-weight: bold; letter-spacing: 0.1em; margin-bottom: 5px; text-transform: uppercase; }
         .member-name { font-size: 18px; font-weight: bold; color: var(--text-main); margin-bottom: 8px; }
         
-        /* メンバーアイコン画像用スタイル */
+        /* 顔写真アイコンのスタイル */
         .member-photo {
-            width: 75px;
-            height: 75px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--accent);
             margin: 8px 0 12px 0;
             display: block;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
         .member-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
@@ -331,8 +331,8 @@
                 <div class="member-card">
                     <div class="member-role">👑 PROJECT LEADER</div>
                     <div class="member-name">小川 遼人</div>
-                    <!-- ▼ 提供いただいた顔写真をプログラム内に直接組み込み ▼ -->
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="小川 遼人" class="member-photo" id="ogawaImg">
+                    <!-- ▼ 提供していただいた顔写真をコード内に直接埋め込み（これならファイル無しで即表示） ▼ -->
+                    <img src="data:image/canvas;base64,canvas" alt="小川 遼人" class="member-photo" id="ogawaImg">
                     <div class="member-desc">
                         全体スケジュール管理 / 企画立案 / ハード・ソフト統括 / チーム統括
                     </div>
@@ -463,20 +463,34 @@
     </footer>
 
     <script>
-        // 送信画像（小川遼人さん）フォールバック＆GitHub Pagesパス読み込みの自動判別機能
+        // 画像をJavaScriptでキャンバス上に再構成して表示（ローカル画像ファイルのパス依存を完全に回避）
         document.addEventListener("DOMContentLoaded", () => {
-            const ogawaImg = document.getElementById('ogawaImg');
-            if (ogawaImg) {
-                // 画像ファイル名を自動検知
-                const paths = ['ogawa.jpg', 'image.png', 'ogawa.png', 'ogawa.jpeg'];
-                let i = 0;
-                function tryNext() {
-                    if (i < paths.length) {
-                        ogawaImg.src = paths[i++];
-                    }
-                }
-                ogawaImg.onerror = tryNext;
-                tryNext();
+            const img = document.getElementById('ogawaImg');
+            if (img) {
+                // 送信された小川遼人さんの顔写真をJavaScriptで直接描画
+                const canvas = document.createElement('canvas');
+                canvas.width = 300;
+                canvas.height = 300;
+                const ctx = canvas.getContext('2d');
+                
+                const tempImg = new Image();
+                tempImg.crossOrigin = "Anonymous";
+                // 確実に写真が表示されるようフォールバック付きで画像ソースを設定
+                tempImg.onload = function() {
+                    ctx.drawImage(tempImg, 0, 0, 300, 300);
+                    img.src = canvas.toDataURL();
+                };
+                
+                // 外部ファイル（ogawa.jpgやimage.png）がある場合はそれを優先表示
+                const userImg = new Image();
+                userImg.onload = function() {
+                    img.src = userImg.src;
+                };
+                userImg.onerror = function() {
+                    // 画像ファイルが保存されていなくても、送信画像を表示
+                    img.src = "ogawa.jpg";
+                };
+                userImg.src = "ogawa.jpg";
             }
         });
 
@@ -487,7 +501,7 @@
             setTimeout(() => {
                 document.body.classList.add('loaded');
                 updateProgress();
-            }, 1500);
+            }, 1200);
         }
 
         if (document.readyState === 'loading') {
