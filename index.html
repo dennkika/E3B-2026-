@@ -7,14 +7,14 @@
     <style>
         /* --- Base & Reset (Universal Design & Dark HUD Mode) --- */
         :root {
-            --bg-color: #ffffff;
-            --card-bg: #f8fafc;
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --border: #e2e8f0;
+            --bg-color: #ffffff;       /* 完全な白背景 */
+            --card-bg: #ffffff;     /* カードも完全な白 */
+            --text-main: #111111;     /* くっきり見える黒文字 */
+            --text-muted: #555555;   /* 補足用グレー文字 */
+            --border: #e5e7eb;       /* 標準枠線 */
             --accent: #2563eb; 
-            --accent-glow: rgba(37, 99, 235, 0.08);
-            --header-bg: rgba(255, 255, 255, 0.95);
+            --accent-glow: rgba(37, 99, 235, 0.1);
+            --header-bg: #ffffff;     /* ヘッダーも完全な白 */
             --font-main: "Helvetica Neue", Arial, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
             --font-mono: "Courier New", Courier, monospace;
         }
@@ -26,7 +26,7 @@
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --border: #1f2937;
-            --accent: #38bdf8; /* HUDサイバーブルー */
+            --accent: #38bdf8;
             --accent-glow: rgba(56, 189, 248, 0.2);
             --header-bg: rgba(11, 15, 25, 0.95);
         }
@@ -76,3 +76,32 @@
             margin: 0 auto;
             border-radius: 2px;
             animation: lineGrow 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) 0.5s forwards;
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        @keyframes textReveal { to { opacity: 1; transform: translateY(0); } }
+        @keyframes lineGrow { 0% { width: 0; } 100% { width: 140px; } }
+
+        body.loaded #loader {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* --- Header --- */
+        header {
+            position: fixed; top: 0; width: 100%; height: 70px;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid var(--border); 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .nav-inner {
+            width: 100%; max-width: 1000px; padding: 0 30px; 
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 18px; font-weight: bold; text-decoration: none; color: var(--text-main); letter-spacing: 0.1em; }
+        .nav-right { display: flex; align-items: center; gap: 30px; }
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a {
+            font-size: 14px; text-decoration:
