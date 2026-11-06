@@ -186,9 +186,15 @@
         /* --- Gallery Section --- */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 15px; }
         .gallery-item {
-            background: var(--bg-color); border: 2px dashed var(--border); border-radius: 8px; height: 160px;
+            background: var(--bg-color); border: 1px solid var(--border); border-radius: 8px; height: 180px;
             display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted);
-            font-size: 13px; text-align: center; padding: 15px;
+            font-size: 13px; text-align: center; overflow: hidden;
+        }
+        .gallery-item img {
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;
+        }
+        .gallery-item img:hover {
+            transform: scale(1.05);
         }
 
         /* --- Report Section (#report) --- */
@@ -314,7 +320,6 @@
                 <h2 style="font-size: 22px; font-weight: bold;">E3B ２班 メンバー構成</h2>
             </div>
             <div class="member-grid">
-                <!-- リーダー -->
                 <div class="member-card">
                     <div class="member-role">👑 PROJECT LEADER</div>
                     <div class="member-name">小川 遼人</div>
@@ -323,7 +328,6 @@
                     </div>
                 </div>
 
-                <!-- プログラミング担当 -->
                 <div class="member-card">
                     <div class="member-role">💻 PROGRAMMING LEAD</div>
                     <div class="member-name">長谷部 陸大</div>
@@ -332,7 +336,6 @@
                     </div>
                 </div>
 
-                <!-- GitHub担当 1 -->
                 <div class="member-card">
                     <div class="member-role">🚀 GITHUB & DEVOPS</div>
                     <div class="member-name">大橋 一楓</div>
@@ -341,16 +344,14 @@
                     </div>
                 </div>
 
-                <!-- GitHub担当 2 -->
                 <div class="member-card">
                     <div class="member-role">🚀 GITHUB & DEVOPS</div>
-                    <div class="member-name">永木一颯</div>
+                    <div class="member-name">山崎ここな＆永木一颯</div>
                     <div class="member-desc">
                         リポジトリ管理 / Webコンテンツ作成・コード保守
                     </div>
                 </div>
 
-                <!-- ドキュメント担当 -->
                 <div class="member-card">
                     <div class="member-role">📄 DOCUMENTATION</div>
                     <div class="member-name">瀧浦 蓮</div>
@@ -397,12 +398,14 @@
                     <div class="timeline-content">
                         M5StickS3の初期動作確認を行いました。テスト用のプロトタイプコードをビルドし、画面全体を赤色に表示する実験を実施。正常に描画されることを確認し、システムの中核となるマイコンが問題なく動作する実証を得ました。
                         
+                        <!-- ▼ 画像枠（ギャラリー） ▼ -->
                         <div class="gallery-grid">
                             <div class="gallery-item">
-                                📷 M5StickS3 赤色画面テスト写真<br><small>(画像をここに追加予定)</small>
+                                <!-- 写真がある場合は src="画像名.jpg" を指定 -->
+                                <img src="image1.jpg" alt="M5StickS3 赤色画面テスト写真" onerror="this.outerHTML='📷 M5StickS3 赤色画面テスト写真<br><small>(画像ファイル未指定)</small>'">
                             </div>
                             <div class="gallery-item">
-                                📷 アクリル板 & 光学フィルム<br><small>(画像をここに追加予定)</small>
+                                <img src="image2.jpg" alt="アクリル板 & 光学フィルム" onerror="this.outerHTML='📷 アクリル板 & 光学フィルム<br><small>(画像ファイル未指定)</small>'">
                             </div>
                         </div>
                     </div>
@@ -448,12 +451,10 @@
     </footer>
 
     <script>
-        // 確実な初期化処理
         function initApp() {
             navigate();
             initTheme();
             
-            // 安全装置：1.5秒でローダーを自動解除
             setTimeout(() => {
                 document.body.classList.add('loaded');
                 updateProgress();
@@ -466,7 +467,6 @@
             initApp();
         }
 
-        // 📊 タスクのDONE数から進捗率(%)を自動計算
         function updateProgress() {
             const allTasks = document.querySelectorAll('.task-item');
             const doneTasks = document.querySelectorAll('.task-item.done');
@@ -481,7 +481,6 @@
             }
         }
 
-        // 🌙/☀️ ダークモード切り替え
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const themeText = document.getElementById('themeText');
@@ -511,7 +510,6 @@
             });
         }
 
-        // ページ切替（STATUS / REPORT / FUTURE）
         function navigate() {
             let hash = window.location.hash || '#status';
             
