@@ -7,14 +7,14 @@
     <style>
         /* --- Base & Reset (Universal Design & Dark HUD Mode) --- */
         :root {
-            --bg-color: #ffffff;       /* 完全な白背景 */
-            --card-bg: #ffffff;     /* カードも完全な白 */
-            --text-main: #111111;     /* くっきり見える黒文字 */
-            --text-muted: #555555;   /* 補足用グレー文字 */
-            --border: #e5e7eb;       /* 標準枠線 */
+            --bg-color: #ffffff;       /* 背景色：完全な白 */
+            --card-bg: #f8fafc;     /* カード背景：ごく薄いグレー */
+            --text-main: #0f172a;     /* メイン文字色：濃い紺黒（見えるように修正） */
+            --text-muted: #475569;   /* サブ文字色：落ち着いたグレー */
+            --border: #e2e8f0;       /* 枠線色 */
             --accent: #2563eb; 
             --accent-glow: rgba(37, 99, 235, 0.1);
-            --header-bg: #ffffff;     /* ヘッダーも完全な白 */
+            --header-bg: rgba(255, 255, 255, 0.95);
             --font-main: "Helvetica Neue", Arial, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
             --font-mono: "Courier New", Courier, monospace;
         }
@@ -104,4 +104,57 @@
         .nav-right { display: flex; align-items: center; gap: 30px; }
         .nav-links { display: flex; gap: 25px; }
         .nav-links a {
-            font-size: 14px; text-decoration:
+            font-size: 14px; text-decoration: none; color: var(--text-muted); 
+            letter-spacing: 0.05em; font-weight: bold; transition: color 0.3s;
+            position: relative; padding: 25px 0;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        .nav-links a.active::after {
+            content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: var(--accent);
+            border-radius: 3px 3px 0 0; box-shadow: 0 0 6px var(--accent);
+        }
+
+        /* ダークモード切り替えボタン */
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* --- Layout --- */
+        .container { max-width: 900px; margin: 0 auto; padding: 120px 30px 80px; min-height: calc(100vh - 80px); }
+        .page-section { display: none; animation: fadeIn 0.4s ease-out forwards; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-header { margin-bottom: 50px; text-align: center; }
+        .section-en { font-size: 14px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: bold; }
+        .section-jp { font-size: 30px; font-weight: bold; letter-spacing: 0.05em; color: var(--text-main); }
+
+        /* --- Tech Stack & Specs --- */
+        .tech-wrapper {
+            background: var(--card-bg); border-radius: 12px; padding: 25px; margin-bottom: 40px;
+            border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .tech-title { font-size: 16px; font-weight: bold; margin-bottom: 15px; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tech-tag {
+            background: var(--bg-color); border: 1px solid var(--border); color: var(--text-muted);
+            padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: bold; font-family: var(--font-mono);
+        }
+        .tech-tag.highlight { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+        /* --- Progress Section (#status) --- */
+        .progress-wrapper { margin-bottom: 40px; background: var(--card-bg); padding: 35px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+        .progress-info { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
+        .progress-label { font-size: 18px; font-weight: bold; }
+        .progress-percent { font-size: 5
